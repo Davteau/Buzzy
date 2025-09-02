@@ -1,20 +1,11 @@
-﻿using MediatR;
+﻿using Application.Common.Models;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApp.Features
 {
     public record TemplateMediatRRequest() : IRequest<string>;
-
-    public static class TemplateEndpoints
-    {
-        public static void MapTemplateEndpoints(this WebApplication app)
-        {
-            app.MapGet("/api/hello", async (IMediator mediator) =>
-            {
-                var result = await mediator.Send(new TemplateMediatRRequest());
-                return Results.Ok(result);
-            });
-        }
-    }
 
     public class TemplateMediatRHandler : IRequestHandler<TemplateMediatRRequest, string>
     {
