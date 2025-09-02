@@ -1,10 +1,13 @@
+using Application;
 using Scalar.AspNetCore;
 using WebApp.Features;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
+builder.Services.AddApplication();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(TemplateMediatRHandler).Assembly));
@@ -20,7 +23,5 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "Hello World!");
 app.UseHttpsRedirection();
-
-app.MapTemplateEndpoints();
 
 app.Run();
