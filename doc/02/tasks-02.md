@@ -3,35 +3,35 @@
 ## ✅ Do zrobienia
 
 - [x] Pliki (solucji) do `src`
-- [ ] Ustalić hierarchię w projekcie (katalogi)
-- [ ] Konwencja pisania commitów  
-  - [ ] Standard RFC  
-  - [ ] Nagłówek (`H1`)  
-  - [ ] Treść w *tunku*  
-- [ ] Jak ułatwić sobie nudne zajęcia *
+- [x] Ustalić hierarchię w projekcie (katalogi)
+- [x] Konwencja pisania commitów  
+  - Standard RFC   
+  - Treść w trunku 
+- [x] Jak ułatwić sobie nudne zajęcia *
 
 ---
 
 ## 🎯 Zadanie – Refleksja
-- [ ] Stworzyć **custom attribute**
-- [ ] Utworzyć dowolną klasę z propertiami
-- [ ] Oznaczyć losowe property tym atrybutem
-- [ ] Skorzystać z refleksji:
-  - [ ] Znaleźć oznaczone property **bez tworzenia instancji klasy**  
-  - [ ] Wylistować ile jest prop. typu `int`, a ile `string`
+- [x] Stworzyć **custom attribute**
+- [x] Utworzyć dowolną klasę z propertiami
+- [x] Oznaczyć losowe property tym atrybutem
+- [x] Skorzystać z refleksji:
+  - [x] Znaleźć oznaczone property **bez tworzenia instancji klasy**  
+  - [x] Wylistować ile jest prop. typu `int`, a ile `string`
 
 ---
 
 ## ⚙️ Setup środowiska
 
-- [ ] Zainstalować **Entity Framework**
-- [ ] Zainstalować **SQL Server lokalnie**
+- [x] Zainstalować **Entity Framework**
+- [x] Zainstalować **SQL Server lokalnie**
 
 ---
 
 ## 🏷️ Dodatkowe
 
-- [ ] Wymyślić **nazwę aplikacji**
+- [x] Wymyślić **nazwę aplikacji**
+- [ ] use case **aplikacji**
 
 ---
 

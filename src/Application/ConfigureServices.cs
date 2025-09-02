@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApp.Features;
 
 namespace Application
 {
@@ -12,11 +13,8 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(options =>
-            {
-                options.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
-
-            });
+            services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(typeof(TemplateMediatRHandler).Assembly));
 
             return services;
         }
