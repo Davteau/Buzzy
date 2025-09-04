@@ -22,7 +22,7 @@ namespace Application.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Application.Common.Models.Service", b =>
+            modelBuilder.Entity("Application.Common.Models.Offering", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

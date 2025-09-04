@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Services;
 
-public record class GetServiceQuery(Guid Id) : IRequest<Service>;
+public record class GetServiceQuery(Guid Id) : IRequest<Offering>;
 
-internal sealed class GetServiceHandler(ApplicationDbContext context) : IRequestHandler<GetServiceQuery, Service>
+internal sealed class GetServiceHandler(ApplicationDbContext context) : IRequestHandler<GetServiceQuery, Offering>
 {
-    public async Task<Service> Handle(GetServiceQuery request, CancellationToken cancellationToken)
+    public async Task<Offering> Handle(GetServiceQuery request, CancellationToken cancellationToken)
     {
         var service = await context.Services.FindAsync(request.Id);
         if (service is null)

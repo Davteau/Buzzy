@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Application.Common.Models
 {
-    public class Service
+    public class Offering
     {
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
 
     }

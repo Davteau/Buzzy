@@ -1,5 +1,7 @@
-﻿using Application.Common.Models;
+﻿using Api.Endpoints.Offerings;
+using Application.Common.Models;
 using Application.Features.Services;
+using Application.Features.Offerings.Commands.CreateOffering;
 using FizzWare.NBuilder;
 using FluentValidation;
 using MediatR;
@@ -13,35 +15,18 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Api.Endpoints
 {
-    public static class ServiceEndpoints
+    public static class OfferingEndpoints
     {
-        public static void MapServiceEndpoints(this WebApplication app)
+        public static void MapOfferingEndpoints(this WebApplication app)
         {
             var serviceGroup = app.MapGroup("/api/services")
                 .WithTags("Service");
 
-            serviceGroup.MapPost("/", async ([FromBody] CreateServiceCommand command, [FromServices] IMediator mediator) =>
-            {
-                try
-                {
-                    var result = await mediator.Send(command);
-                    return Results.Created($"/api/service/{result.Id}", result);
-                }
-                catch(FluentValidation.ValidationException ex)
-                {
-                    return Results.ValidationProblem(ex.Errors
-                        .GroupBy(e => e.PropertyName)
-                        .ToDictionary(
-                            g => g.Key,
-                            g => g.Select(e => e.ErrorMessage).ToArray()
-                        ));
-                }
-
-            })
+            serviceGroup.MapPost("/", CreateOfferingEndpoint.Handle)
                 .WithSummary("Create a new service")
                 .WithDescription("Adds a new service to the system")
-                .Produces<Service>(StatusCodes.Status201Created)
-                .Produces<ProblemDetailsBadRequestExample>(StatusCodes.Status400BadRequest)
+                .Produces<Offering>(StatusCodes.Status201Created)
+                .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status500InternalServerError);
 
 
@@ -101,7 +86,7 @@ namespace Api.Endpoints
             })
             .WithSummary("Get services")
             .WithDescription("Returns the list of services")
-            .Produces<IEnumerable<Service>>(StatusCodes.Status200OK);
+            .Produces<IEnumerable<Offering>>(StatusCodes.Status200OK);
 
             serviceGroup.MapGet("/{id}", async ([FromRoute] string id ,IMediator mediator) =>
             {
@@ -127,17 +112,8 @@ namespace Api.Endpoints
             })
             .WithSummary("Get service")
             .WithDescription("Returns a service")
-            .Produces<Service>(StatusCodes.Status200OK)
+            .Produces<Offering>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
-        }
-    }
-
-    public class ProblemDetailsBadRequestExample : ProblemDetails
-    {
-        public ProblemDetailsBadRequestExample()
-        {
-            Title = "Tytuł z Bad Request 400 example";
-            Status = (int)HttpStatusCode.BadRequest;
         }
     }
 }

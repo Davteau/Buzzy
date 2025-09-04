@@ -6,20 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.Features;
-using Application.Features.Services;
+using Application.Common.Behaviours;
+using Application.Features.Services.Validators;
 
 namespace Application
 {
-    public static class DependencyInjection
+    public static class ApplicationServiceRegistration
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+            services.AddMediatR(options =>
+            {
+                options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+                options.RegisterServicesFromAssembly(typeof(ApplicationServiceRegistration).Assembly);
 
-            services.AddValidatorsFromAssembly(typeof(CreateServiceValidator).Assembly, includeInternalTypes: true);
-            services.AddValidatorsFromAssembly(typeof(DeleteServiceValidator).Assembly, includeInternalTypes: true);
+            });
+            services.AddValidatorsFromAssembly(typeof(CreateOfferingValidator).Assembly, includeInternalTypes: true);
 
             return services;
         }

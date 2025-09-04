@@ -1,6 +1,7 @@
 ﻿using Application.Infrastructure.Persistence;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,11 @@ internal sealed class DeleteServiceHandler(ApplicationDbContext context, IValida
         {
             throw new FluentValidation.ValidationException(validationResult.Errors);
         }
+
         var service = await context.Services.FindAsync(request.Id);
         if (service is null)
         {
+            Results.NotFound(request.Id);
             throw new KeyNotFoundException($"Service with ID {request.Id} not found.");
         }
 

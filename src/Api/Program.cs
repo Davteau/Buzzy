@@ -5,8 +5,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using System;
-using WebApp.Endpoints;
-using WebApp.Features;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,14 +29,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference("/scalar/v1/api");
 }
 
-app.MapGet("/", () => "Hello World!")
-    .WithDescription("To w odpowiedzi daje hello world")
-    .Produces<string>(StatusCodes.Status200OK)
-    .Produces(StatusCodes.Status400BadRequest)
-    .WithSummary("Hello World endpoint");
-
 app.UseHttpsRedirection();
-app.MapTemplateEndpoints();
-app.MapServiceEndpoints();
+app.MapOfferingEndpoints();
 
 app.Run();

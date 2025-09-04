@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Services;
 
-public record class GetServicesQuery() : IRequest<IEnumerable<Service>>;
+public record class GetServicesQuery() : IRequest<IEnumerable<Offering>>;
 
-internal sealed class GetServicesHandler(ApplicationDbContext context) : IRequestHandler<GetServicesQuery, IEnumerable<Service>>
+internal sealed class GetServicesHandler(ApplicationDbContext context) : IRequestHandler<GetServicesQuery, IEnumerable<Offering>>
 {
-    public async Task<IEnumerable<Service>> Handle(GetServicesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Offering>> Handle(GetServicesQuery request, CancellationToken cancellationToken)
     {
         return await context.Services.ToListAsync(cancellationToken);
     }

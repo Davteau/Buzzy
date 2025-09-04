@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250903102517_serviceEdit2")]
-    partial class serviceEdit2
+    [Migration("20250904085241_OfferingChanges")]
+    partial class OfferingChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Application.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Application.Common.Models.Service", b =>
+            modelBuilder.Entity("Application.Common.Models.Offering", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

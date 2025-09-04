@@ -10,6 +10,6 @@ namespace Application.Infrastructure.Persistence
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public DbSet<Service> Services { get; set; }
+        public DbSet<Offering> Services { get; set; }
     }
 }
