@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Behaviours;
 using Application.Features.Services.Validators;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("UnitTests")]
 
 namespace Application
 {

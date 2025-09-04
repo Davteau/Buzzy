@@ -6,24 +6,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Offerings.Commands.CreateOffering;
 
-public record CreateOfferingCommand(string Name, string Description, decimal Price)
-    : IRequest<ErrorOr<Offering>>;
+public record CreateOfferingCommand(string Name, string Description, decimal Price) : IRequest<ErrorOr<Offering>>;
 
-internal sealed class CreateOfferingHandler(
-    ApplicationDbContext context
-) : IRequestHandler<CreateOfferingCommand, ErrorOr<Offering>>
+internal sealed class CreateOfferingHandler(ApplicationDbContext context) : IRequestHandler<CreateOfferingCommand, ErrorOr<Offering>>
 {
     public async Task<ErrorOr<Offering>> Handle(CreateOfferingCommand request, CancellationToken cancellationToken)
     {
         var offering = new Offering
         {
-            Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
             Price = request.Price
         };
 
-        context.Services.Add(offering);
+        context.Offerings.Add(offering);
+
         await context.SaveChangesAsync(cancellationToken);
 
         return offering;

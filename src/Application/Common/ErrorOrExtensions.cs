@@ -1,10 +1,11 @@
 ﻿using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 public static class ErrorOrExtensions
 {
-    public static IResult MatchToResult<T>(this ErrorOr<T> result, string v)
+    public static IResult MatchToResult<T>(this ErrorOr<T> result)
     {
         return result.Match(
             value => Results.Ok(value),
@@ -16,6 +17,14 @@ public static class ErrorOrExtensions
     {
         return result.Match(
             value => Results.Created(uri, value),
+            errors => MapErrors(errors)
+        );
+    }
+
+    public static IResult MatchToResultNoContent(this ErrorOr<Unit> result)
+    {
+        return result.Match(
+            _ => Results.NoContent(),
             errors => MapErrors(errors)
         );
     }
@@ -35,7 +44,7 @@ public static class ErrorOrExtensions
 
         if (errors.All(e => e.Type == ErrorType.NotFound))
         {
-            return Results.NotFound(new { Errors = errors.Select(e => e.Description) });
+            return Results.NotFound(new { Errors = errors.Select(e => new {e.Code,e.Description }) });
         }
 
         return Results.Problem(

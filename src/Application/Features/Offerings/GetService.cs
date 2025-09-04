@@ -16,7 +16,7 @@ internal sealed class GetServiceHandler(ApplicationDbContext context) : IRequest
 {
     public async Task<Offering> Handle(GetServiceQuery request, CancellationToken cancellationToken)
     {
-        var service = await context.Services.FindAsync(request.Id);
+        var service = await context.Offerings.FindAsync(request.Id);
         if (service is null)
         {
             throw new KeyNotFoundException($"Service with ID {request.Id} not found.");

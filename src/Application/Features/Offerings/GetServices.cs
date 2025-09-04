@@ -17,6 +17,6 @@ internal sealed class GetServicesHandler(ApplicationDbContext context) : IReques
 {
     public async Task<IEnumerable<Offering>> Handle(GetServicesQuery request, CancellationToken cancellationToken)
     {
-        return await context.Services.ToListAsync(cancellationToken);
+        return await context.Offerings.ToListAsync(cancellationToken);
     }
 }

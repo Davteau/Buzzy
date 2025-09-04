@@ -1,5 +1,4 @@
-﻿using Api.Endpoints.Offerings;
-using Application.Common.Models;
+﻿using Application.Common.Models;
 using Application.Features.Services;
 using Application.Features.Offerings.Commands.CreateOffering;
 using FizzWare.NBuilder;
@@ -11,109 +10,64 @@ using Microsoft.OpenApi.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using ErrorOr;
+using Application.Features.Services.Handlers;
+using Application.Features.Offeringss.Handlers;
 
 
-namespace Api.Endpoints
+namespace Api.Endpoints;
+
+public static class OfferingEndpoints
 {
-    public static class OfferingEndpoints
+    public static void MapOfferingEndpoints(this WebApplication app)
     {
-        public static void MapOfferingEndpoints(this WebApplication app)
+        var serviceGroup = app.MapGroup("/api/offerings")
+            .WithTags("Offering");
+
+        serviceGroup.MapPost("/", async (CreateOfferingCommand command, [FromServices] IMediator mediator) =>
         {
-            var serviceGroup = app.MapGroup("/api/services")
-                .WithTags("Service");
+            ErrorOr<Offering> result = await mediator.Send(command);
+            return result.MatchToResultCreated($"/api/offerings/{result.Value?.Id}");
+        })
+        .WithSummary("Create a new offering")
+        .WithDescription("Adds a new offering to the system")
+        .WithCreatedResponse<Offering>()
+        .WithOpenApi(o =>
+        {
+            o.Summary = "Create a new offering";
+            o.Description = "Adds a new offering to the system";
+            return o;
+        });
 
-            serviceGroup.MapPost("/", CreateOfferingEndpoint.Handle)
-                .WithSummary("Create a new service")
-                .WithDescription("Adds a new service to the system")
-                .Produces<Offering>(StatusCodes.Status201Created)
-                .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-                .Produces(StatusCodes.Status500InternalServerError);
+        serviceGroup.MapDelete("/{id}", async ([FromRoute] Guid id, [FromServices] IMediator mediator) =>
+        {
+            ErrorOr<Unit> result = await mediator.Send(new DeleteOfferingCommand(id));
+            return result.MatchToResultNoContent();
 
+        })
+        .WithSummary("Delete an offering")
+        .WithDescription("Deletes an existing offering by its ID.")
+        .WithNoContentResponse();
 
-            serviceGroup.MapDelete("/{id}", async ([FromRoute] string id, [FromServices] IMediator mediator) =>
-            {
-                if (!Guid.TryParse(id, out var guid))
-                {
-                    return Results.ValidationProblem(new Dictionary<string, string[]>
-                    {
-                        ["Id"] = new[] { "Invalid or missing Id." }
-                    });
-                }
+        serviceGroup.MapGet("/", async (IMediator mediator) =>
+        {
+            ErrorOr<IEnumerable<Offering>> result = await mediator.Send(new GetOfferingsQuery());
+            return result.MatchToResult();
+        })
+        .WithSummary("Get offerings")
+        .WithDescription("Returns the list of offerings")
+        .Produces<IEnumerable<Offering>>(StatusCodes.Status200OK);
 
-                var command = new DeleteServiceCommand(guid);
-
-                try
-                {
-                    await mediator.Send(command);
-                    return Results.NoContent();
-                }
-                catch (FluentValidation.ValidationException ex)
-                {
-                    return Results.ValidationProblem(ex.Errors
-                        .GroupBy(e => e.PropertyName)
-                        .ToDictionary(
-                            g => g.Key,
-                            g => g.Select(e => e.ErrorMessage).ToArray()
-                        ));
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    return Results.NotFound(new { Message = ex.Message }); // 404
-                }
-                catch (Exception ex)
-                {
-                    return Results.Problem(detail: ex.Message, statusCode: 500); // 500
-                }
-
-            })
-            .WithSummary("Delete a service")
-            .WithDescription("Deletes an existing service by its ID.")
-            .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status500InternalServerError);
-
-            serviceGroup.MapGet("/", async (IMediator mediator) =>
-            {
-                try
-                {
-                    var result = await mediator.Send(new GetServicesQuery());
-                    return Results.Ok(result);
-                }
-                catch (Exception ex)
-                {
-                    return Results.Problem(detail: ex.Message, statusCode: 500);
-                }
-            })
-            .WithSummary("Get services")
-            .WithDescription("Returns the list of services")
-            .Produces<IEnumerable<Offering>>(StatusCodes.Status200OK);
-
-            serviceGroup.MapGet("/{id}", async ([FromRoute] string id ,IMediator mediator) =>
-            {
-                if (!Guid.TryParse(id, out var guid))
-                {
-                    return Results.ValidationProblem(new Dictionary<string, string[]>
-                    {
-                        ["Id"] = new[] { "Invalid or missing Id." }
-                    });
-                }
-
-                var command = new GetServiceQuery(guid);
-
-                try
-                {
-                    var result = await mediator.Send(command);
-                    return Results.Ok(result);
-                }
-                catch (Exception ex)
-                {
-                    return Results.Problem(detail: ex.Message, statusCode: 500);
-                }
-            })
-            .WithSummary("Get service")
-            .WithDescription("Returns a service")
-            .Produces<Offering>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound);
-        }
+        serviceGroup.MapGet("/{id}", async ([FromRoute] Guid id ,IMediator mediator) =>
+        {
+            ErrorOr<Offering> result = await mediator.Send(new GetOfferingQuery(id));
+            return result.MatchToResult();
+                
+        })
+        .WithSummary("Get offering")
+        .WithDescription("Returns an offering")
+        .Produces<Offering>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }
+

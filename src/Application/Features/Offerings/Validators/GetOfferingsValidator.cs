@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Common.Models
+namespace Application.Features.Services.Validators
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class MyAttribute : Attribute
+    internal class GetOfferingsValidator
     {
     }
 }

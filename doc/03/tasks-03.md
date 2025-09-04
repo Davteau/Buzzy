@@ -53,7 +53,7 @@
   - [ ] ?
   - [ ] ?
 
-- [ ] TDD
+- [x] TDD
 
 - [x] Delegaty w LINQ
 
@@ -61,4 +61,4 @@
 
 - [x] Enkapsulacja
 
-- [ ] Serwis z generowana liczba, zarejestrowanie w roznych scopach, wywolanie w API
+- [x] Serwis z generowana liczba, zarejestrowanie w roznych scopach, wywolanie w API
