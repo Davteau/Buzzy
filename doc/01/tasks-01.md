@@ -31,7 +31,7 @@
 - [ ] **Refleksja w soft dev**
 
 ## 4. MediatR i handlery
-- [ ] Dlaczego handlery z MediatR przypominają serwisy?
+- [x] Dlaczego handlery z MediatR przypominają serwisy?
   - Każdy handler realizuje **jedną, spójną operację biznesową**
   - Podobnie jak serwis, enkapsuluje logikę i może być wywoływany niezależnie
   - Różnica: handlery są często **bardziej granularne** i skupione na pojedynczym request-cie

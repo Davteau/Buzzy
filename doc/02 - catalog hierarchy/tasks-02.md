@@ -31,7 +31,7 @@
 ## 🏷️ Dodatkowe
 
 - [x] Wymyślić **nazwę aplikacji**
-- [ ] use case **aplikacji**
+- [x] use case **aplikacji**
 
 ---
 

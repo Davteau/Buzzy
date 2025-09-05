@@ -1,18 +1,10 @@
 ﻿using Application.Common.Models;
-using Application.Features.Services;
 using Application.Features.Offerings.Commands.CreateOffering;
-using FizzWare.NBuilder;
-using FluentValidation;
+using Application.Features.Offeringss.Handlers;
+using Application.Features.Services.Handlers;
+using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using ErrorOr;
-using Application.Features.Services.Handlers;
-using Application.Features.Offeringss.Handlers;
 
 
 namespace Api.Endpoints;
@@ -58,11 +50,11 @@ public static class OfferingEndpoints
         .WithDescription("Returns the list of offerings")
         .Produces<IEnumerable<Offering>>(StatusCodes.Status200OK);
 
-        serviceGroup.MapGet("/{id}", async ([FromRoute] Guid id ,IMediator mediator) =>
+        serviceGroup.MapGet("/{id}", async ([FromRoute] Guid id, IMediator mediator) =>
         {
             ErrorOr<Offering> result = await mediator.Send(new GetOfferingQuery(id));
             return result.MatchToResult();
-                
+
         })
         .WithSummary("Get offering")
         .WithDescription("Returns an offering")

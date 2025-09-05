@@ -2,7 +2,6 @@
 using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Offerings.Commands.CreateOffering;
 

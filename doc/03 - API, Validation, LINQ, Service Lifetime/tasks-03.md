@@ -1,6 +1,6 @@
 # ✅ Do zrobienia
 
-- [ ] Konfiguracja Scalar w Program.cs
+- [x] Konfiguracja Scalar w Program.cs
 - [x] Problem Details, RFC
 
 ## API responses
@@ -21,10 +21,10 @@
   - [x] Jakie są dobre praktyki w projektowaniu REST API?
   - [x] Jak najlepiej zacząć budowanie REST API w minimal API w .NET od zera?
 
-- [ ] Struktura inicjalizująca endpointy
-  - [ ] Opisy kodów per endpoint jeżeli wymagane
-  - [ ] Example
-  - [ ] Biblioteki generujące dane (np. NBuilder)
+- [x] Struktura inicjalizująca endpointy
+  - [x] Opisy kodów per endpoint jeżeli wymagane
+  - [x] Example
+  - [x] Biblioteki generujące dane (np. NBuilder)
 
 ## Validating
 
@@ -39,9 +39,9 @@
 - [x] Get (information about service)
 - [x] Get (lsit of every service)
 
-- [ ] Najczęstsze rodzaje Exceptions w .NET
-  - [ ] Kiedy się pojawiają?
-  - [ ] Które je mogą zwrócić?
+- [x] Najczęstsze rodzaje Exceptions w .NET
+  - [x] Kiedy się pojawiają?
+  - [x] Które je mogą zwrócić?
 
 ## Testing
 
