@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.Features.Offerings.Commands.CreateOffering;
 
-public record CreateOfferingCommand(string Name, string Description, decimal Price) : IRequest<ErrorOr<Offering>>;
+public record CreateOfferingCommand(string Name, string Description, decimal Price, int Duration) : IRequest<ErrorOr<Offering>>;
 
 internal sealed class CreateOfferingHandler(ApplicationDbContext context) : IRequestHandler<CreateOfferingCommand, ErrorOr<Offering>>
 {
@@ -15,7 +15,8 @@ internal sealed class CreateOfferingHandler(ApplicationDbContext context) : IReq
         {
             Name = request.Name,
             Description = request.Description,
-            Price = request.Price
+            Price = request.Price,
+            Duration = TimeSpan.FromMinutes(request.Duration),
         };
 
         context.Offerings.Add(offering);

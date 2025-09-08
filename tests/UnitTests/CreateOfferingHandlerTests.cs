@@ -24,7 +24,7 @@ public class CreateOfferingHandlerTests
         // Arrange
         var context = GetInMemoryDb();
         var handler = new CreateOfferingHandler(context);
-        var command = new CreateOfferingCommand("Test Offering", "Test Description", 99.99m);
+        var command = new CreateOfferingCommand("Test Offering", "Test Description", 99.99m, 30);
 
         // Act
         ErrorOr<Offering> result = await handler.Handle(command, CancellationToken.None);
