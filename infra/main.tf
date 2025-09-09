@@ -27,9 +27,6 @@ resource "azurerm_postgresql_flexible_server" "db" {
   storage_mb             = 32768
   version                = "13"
   backup_retention_days  = 7
-  storage_profile {
-    storage_mb = 32768
-  }
 }
 
 # Key Vault
@@ -51,7 +48,6 @@ resource "azurerm_service_plan" "plan" {
   resource_group_name = azurerm_resource_group.rg.name
   sku_name            = "B1"     
   os_type             = "Linux"
-  kind                = "App"
 }
 
 # App Service
