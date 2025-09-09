@@ -31,4 +31,9 @@ jobs:
 
       - name: Terraform Apply
         working-directory: infra
+        env:
+          tf_var_db_admin_password: ${{ secrets.PG_ADMIN_PASSWORD }}
+          tf_var_environment: dev
+          tf_var_project_name: Buzzy
         run: terraform apply -input=false -auto-approve tfplan
+
