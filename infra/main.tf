@@ -4,13 +4,13 @@ provider "azurerm" {
 
 # Resource Group
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-demo-001"
-  location = "westeurope"
+  name     = "${var.project_name}-${var.environment}-rg"
+  location = var.location
 }
 
-# App Insights
+# Application Insights
 resource "azurerm_application_insights" "appinsights" {
-  name                = "appi-demo-001"
+  name                = "${var.project_name}-${var.environment}-ai"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   application_type    = "web"
@@ -18,28 +18,34 @@ resource "azurerm_application_insights" "appinsights" {
 
 # PostgreSQL Flexible Server
 resource "azurerm_postgresql_flexible_server" "db" {
-  name                   = "pg-demo-001"
+  name                   = "${var.project_name}-${var.environment}-pg"
   resource_group_name    = azurerm_resource_group.rg.name
   location               = azurerm_resource_group.rg.location
   administrator_login    = "pgadmin"
-  administrator_password = "SuperStrongP@ssw0rd!"
+  administrator_password = var.db_admin_password
   sku_name               = "B_Standard_B1ms"
   storage_mb             = 32768
   version                = "13"
+  backup_retention_days  = 7
+  storage_autogrow_enabled = true
 }
 
-# KeyVault
+# Key Vault
 resource "azurerm_key_vault" "kv" {
-  name                = "kv-demo-001"
+  name                = "${var.project_name}${var.environment}kv"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  tenant_id           = "00000000-0000-0000-0000-000000000000"
+  tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
+  soft_delete_enabled = true
+  purge_protection_enabled = false
 }
 
-# App Service Plan + App Service
-resource "azurerm_app_service_plan" "plan" {
-  name                = "asp-demo-001"
+data "azurerm_client_config" "current" {}
+
+# App Service Plan
+resource "azurerm_service_plan" "plan" {
+  name                = "${var.project_name}-${var.environment}-asp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku {
@@ -48,13 +54,16 @@ resource "azurerm_app_service_plan" "plan" {
   }
 }
 
-resource "azurerm_app_service" "app" {
-  name                = "app-demo-001"
+# App Service
+resource "azurerm_service" "app" {
+  name                = "${var.project_name}-${var.environment}-app"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.plan.id
+  https_only          = true
 
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
+    "POSTGRESQL_ADMIN_PASSWORD"      = var.db_admin_password
   }
 }
