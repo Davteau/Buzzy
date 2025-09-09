@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace Application.Common.Models;
 
-/// <summary>
-/// 
-/// </summary>
 public class Employee
 {
     public Guid Id { get; set; }
@@ -19,9 +16,6 @@ public class Employee
     public Guid BusinessId { get; set; }
     public Business Business { get; set; } // The business the employee works for
 
-    /// <summary>
-    /// terazniejsze zadanie
-    /// </summary>
     public IEnumerable<Appointment>? Appointments { get; set; } // List of appointments assigned to the employee
     public IEnumerable<EmployeeOffering>? EmployeeOfferings { get; set; } // List of services the employee can perform
 }
