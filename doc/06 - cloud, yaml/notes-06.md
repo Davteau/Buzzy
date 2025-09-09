@@ -122,3 +122,9 @@ These are the three main service models in cloud computing. They differ by **how
 | **Common use**      | Config files (Docker Compose, GitHub Actions) | API communication (REST)       | Document data, legacy APIs (SOAP)   |
 | **Advantages**      | ✅ Human-readable, supports comments        | ✅ Easy to parse, widely used    | ✅ Flexible, supports schemas        |
 | **Disadvantages**   | ⚠️ Sensitive to indentation                 | ⚠️ No comments, less readable in large files | ⚠️ Verbose, many tags, harder to read |
+
+
+## Use-case
+
+### Propozycja nowej kategorii
+### Zapraszanie pracownika do firmy

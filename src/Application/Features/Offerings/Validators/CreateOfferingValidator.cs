@@ -17,5 +17,10 @@ internal sealed class CreateOfferingValidator : AbstractValidator<CreateOffering
         RuleFor(x => x.Price)
             .NotEmpty().WithMessage("Price is required")
             .GreaterThanOrEqualTo(0).WithMessage("Price must be a non-negative value.");
+
+        RuleFor(x => x.Category)
+            .NotEmpty().WithMessage("Category is required")
+            .Must(id => id != Guid.Empty).WithMessage("Category must be a valid GUID.");
+
     }
 }

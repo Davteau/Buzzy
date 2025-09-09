@@ -11,6 +11,8 @@ internal sealed class GetOfferingsHandler(ApplicationDbContext context) : IReque
 {
     public async Task<ErrorOr<IEnumerable<Offering>>> Handle(GetOfferingsQuery request, CancellationToken cancellationToken)
     {
-        return await context.Offerings.ToListAsync(cancellationToken);
+        return await context.Offerings
+            .Include(c=>c.Category)
+            .ToListAsync(cancellationToken);
     }
 }

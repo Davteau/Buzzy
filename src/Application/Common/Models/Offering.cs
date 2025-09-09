@@ -13,7 +13,8 @@ public class Offering
     [MaxLength(250)]
     public string Description { get; set; }
 
-    public OfferingCategory Category { get; set; }
+    public Guid CategoryId { get; set; }
+    public OfferingCategory? Category { get; set; }
 
     public decimal Price { get; set; }
 
