@@ -27,7 +27,9 @@ resource "azurerm_postgresql_flexible_server" "db" {
   storage_mb             = 32768
   version                = "13"
   backup_retention_days  = 7
-  storage_autogrow_enabled = true
+  storage_profile {
+    storage_mb = 32768
+  }
 }
 
 # Key Vault
@@ -37,7 +39,6 @@ resource "azurerm_key_vault" "kv" {
   resource_group_name = azurerm_resource_group.rg.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   sku_name            = "standard"
-  soft_delete_enabled = true
   purge_protection_enabled = false
 }
 
@@ -48,10 +49,9 @@ resource "azurerm_service_plan" "plan" {
   name                = "${var.project_name}-${var.environment}-asp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  sku {
-    tier = "Basic"
-    size = "B1"
-  }
+  sku_name            = "B1"     
+  os_type             = "Linux"
+  kind                = "App"
 }
 
 # App Service
