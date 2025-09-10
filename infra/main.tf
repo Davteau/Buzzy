@@ -1,6 +1,6 @@
 provider "azurerm" {
-  
   features {}
+  subscription_id = jsondecode(var.azure_credentials_json).subscriptionId
 }
 
 # Resource Group
