@@ -9,17 +9,17 @@ jobs:
 
     env:
       TF_VAR_db_admin_password: ${{ secrets.PG_ADMIN_PASSWORD }}
-      TF_VAR_environment: 'dev'
-      TF_VAR_project_name: 'Buzzy'
+      TF_VAR_environment: dev
+      TF_VAR_project_name: Buzzy
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.9.0
 
       - name: Azure Login
         uses: azure/login@v2
@@ -29,6 +29,13 @@ jobs:
       - name: Terraform Init
         working-directory: infra
         run: terraform init -input=false
+      
+      - name: Print Terraform Variables
+        working-directory: infra
+        run: |
+          echo "Project Name: $(terraform console <<< 'var.project_name')"
+          echo "Environment: $(terraform console <<< 'var.environment')"
+          echo "PostgreSQL Password (sensitive, hidden): (check secret)"
 
       - name: Terraform Plan
         working-directory: infra
