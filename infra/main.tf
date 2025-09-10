@@ -51,3 +51,12 @@ resource "azurerm_service_plan" "plan" {
   sku_name            = "B1"     
   os_type             = "Linux"
 }
+
+# App Service
+resource "azurerm_app_service" "app" {
+  name                = "${var.project_name}-${var.environment}-app"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_service_plan.plan.id
+  https_only          = true
+}
