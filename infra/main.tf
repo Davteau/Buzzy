@@ -30,6 +30,8 @@ resource "azurerm_postgresql_flexible_server" "db" {
   backup_retention_days  = 7
 }
 
+data "azurerm_client_config" "current" {}
+
 # Key Vault
 resource "azurerm_key_vault" "kv" {
   name                = "${var.project_name}${var.environment}kv"
