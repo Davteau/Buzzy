@@ -31,6 +31,10 @@ jobs:
         working-directory: infra
         run: terraform init -input=false
 
+      - name: Terraform Import Resource Group
+        working-directory: infra
+        run: terraform import azurerm_resource_group.rg /subscriptions/ca001ed5-8efc-40e9-bb2a-4dc688ec49cd/resourceGroups/Buzzy-dev-rg
+
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -out=tfplan -input=false
