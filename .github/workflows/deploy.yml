@@ -29,13 +29,6 @@ jobs:
       - name: Terraform Init
         working-directory: infra
         run: terraform init -input=false
-      
-      - name: Print Terraform Variables
-        working-directory: infra
-        run: |
-          echo "Project Name: $(terraform console <<< 'var.project_name')"
-          echo "Environment: $(terraform console <<< 'var.environment')"
-          echo "PostgreSQL Password (sensitive, hidden): (check secret)"
 
       - name: Terraform Plan
         working-directory: infra
