@@ -19,7 +19,7 @@ resource "azurerm_application_insights" "appinsights" {
 
 # PostgreSQL Flexible Server
 resource "azurerm_postgresql_flexible_server" "db" {
-  name                   = "${var.project_name}-${var.environment}-pg"
+  name                   = "${lower(var.project_name)}-${lower(var.environment)}-pg"
   resource_group_name    = azurerm_resource_group.rg.name
   location               = azurerm_resource_group.rg.location
   administrator_login    = "pgadmin"
