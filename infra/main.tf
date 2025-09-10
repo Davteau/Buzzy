@@ -26,7 +26,7 @@ resource "azurerm_postgresql_flexible_server" "db" {
   administrator_password = var.db_admin_password
   sku_name               = "B_Standard_B1ms"
   storage_mb             = 32768
-  version                = "13"
+  version                = "15"
   backup_retention_days  = 7
 }
 
@@ -34,7 +34,7 @@ data "azurerm_client_config" "current" {}
 
 # Key Vault
 resource "azurerm_key_vault" "kv" {
-  name                = "${var.project_name}${var.environment}kv"
+  name                = "${var.project_name}-${var.environment}-kv"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
