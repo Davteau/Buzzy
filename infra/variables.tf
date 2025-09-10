@@ -19,7 +19,7 @@ variable "db_admin_password" {
 variable "location" {
   description = "Azure Region"
   type        = string
-  default     = "westeurope"
+  default     = "polandcentral"
 }
 
 variable "project_name" {
