@@ -53,10 +53,15 @@ resource "azurerm_service_plan" "plan" {
 }
 
 # App Service
-resource "azurerm_app_service" "app" {
+resource "azurerm_linux_web_app" "app" {
   name                = "${var.project_name}-${var.environment}-app"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_service_plan.plan.id
-  https_only          = true
+  service_plan_id     = azurerm_service_plan.plan.id
+
+  site_config {
+    always_on = true
+  }
+
+  https_only = true
 }
