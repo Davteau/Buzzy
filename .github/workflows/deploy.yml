@@ -33,7 +33,7 @@ jobs:
 
       - name: Terraform Import Resource Group
         working-directory: infra
-        run: terraform import azurerm_resource_group.rg /subscriptions/ca001ed5-8efc-40e9-bb2a-4dc688ec49cd/resourceGroups/Buzzy-dev-rg
+        run: terraform import azurerm_resource_group.rg /subscriptions/${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}/resourceGroups/Buzzy-dev-rg
 
       - name: Terraform Plan
         working-directory: infra
