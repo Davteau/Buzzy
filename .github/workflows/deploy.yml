@@ -37,7 +37,8 @@ jobs:
           terraform import azurerm_resource_group.rg /subscriptions/${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}/resourceGroups/Buzzy-dev-rg
           terraform import azurerm_application_insights.appinsights /subscriptions/${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}/resourceGroups/Buzzy-dev-rg/providers/Microsoft.Insights/components/Buzzy-dev-ai
           terraform import azurerm_postgresql_flexible_server.db "/subscriptions/${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}/resourceGroups/Buzzy-dev-rg/providers/Microsoft.DBforPostgreSQL/flexibleServers/buzzy-dev-pg"
-          
+          terraform import azurerm_key_vault/subscriptions/${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}/resourceGroups/Buzzy-dev-rg/providers/Microsoft.KeyVault/vaults/Buzzy-dev-kv
+
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -out=tfplan -input=false
