@@ -17,7 +17,6 @@ resource "azurerm_application_insights" "appinsights" {
   application_type    = "web"
 }
 
-# PostgreSQL Flexible Server
 resource "azurerm_postgresql_flexible_server" "db" {
   name                   = "${lower(var.project_name)}-${lower(var.environment)}-pg"
   resource_group_name    = azurerm_resource_group.rg.name
@@ -29,7 +28,14 @@ resource "azurerm_postgresql_flexible_server" "db" {
   version                = "15"
   backup_retention_days  = 7
   zone                   = "2"
+
+  lifecycle {
+    ignore_changes = [
+      administrator_password
+    ]
+  }
 }
+
 
 data "azurerm_client_config" "current" {}
 
