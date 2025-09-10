@@ -16,3 +16,16 @@ resource "azurerm_application_insights" "appinsights" {
   resource_group_name = azurerm_resource_group.rg.name
   application_type    = "web"
 }
+
+# PostgreSQL Flexible Server
+resource "azurerm_postgresql_flexible_server" "db" {
+  name                   = "${var.project_name}-${var.environment}-pg"
+  resource_group_name    = azurerm_resource_group.rg.name
+  location               = azurerm_resource_group.rg.location
+  administrator_login    = "pgadmin"
+  administrator_password = var.db_admin_password
+  sku_name               = "B_Standard_B1ms"
+  storage_mb             = 32768
+  version                = "13"
+  backup_retention_days  = 7
+}
