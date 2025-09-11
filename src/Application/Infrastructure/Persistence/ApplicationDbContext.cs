@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Common.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Offering> Offerings { get; set; }
+        public DbSet<Business> Businesses { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<OfferingCategory> OfferingCategories { get; set; }
+        public DbSet<EmployeeOffering> EmployeeOfferings { get; set; }
     }
 }

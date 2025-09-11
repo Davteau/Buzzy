@@ -1,22 +1,25 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Application.Common.Behaviours;
+using Application.Features.Services.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebApp.Features;
+using System.Runtime.CompilerServices;
 
-namespace Application
+[assembly: InternalsVisibleTo("UnitTests")]
+
+namespace Application;
+
+public static class ApplicationServiceRegistration
 {
-    public static class ConfigureServices
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        services.AddMediatR(options =>
         {
-            services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(typeof(TemplateMediatRHandler).Assembly));
+            options.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+            options.RegisterServicesFromAssembly(typeof(ApplicationServiceRegistration).Assembly);
 
-            return services;
-        }
+        });
+        services.AddValidatorsFromAssembly(typeof(CreateOfferingValidator).Assembly, includeInternalTypes: true);
+
+        return services;
     }
 }

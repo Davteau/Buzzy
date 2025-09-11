@@ -3,6 +3,7 @@ using System;
 using Application.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250909081830_AddedOfferingCategory")]
+    partial class AddedOfferingCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,7 +113,7 @@ namespace Application.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Application.Common.Models.EmployeeOffering", b =>
@@ -137,7 +140,7 @@ namespace Application.Migrations
 
                     b.HasIndex("OfferingId");
 
-                    b.ToTable("EmployeeOfferings");
+                    b.ToTable("EmployeeOffering");
                 });
 
             modelBuilder.Entity("Application.Common.Models.Offering", b =>
@@ -160,6 +163,9 @@ namespace Application.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval");
 
+                    b.Property<Guid?>("EmployeeId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -177,6 +183,8 @@ namespace Application.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("EmployeeId");
+
                     b.ToTable("Offerings");
                 });
 
@@ -193,7 +201,7 @@ namespace Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OfferingCategories");
+                    b.ToTable("OfferingCategory");
                 });
 
             modelBuilder.Entity("Application.Common.Models.User", b =>
@@ -215,7 +223,7 @@ namespace Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Application.Common.Models.Appointment", b =>
@@ -271,7 +279,7 @@ namespace Application.Migrations
             modelBuilder.Entity("Application.Common.Models.EmployeeOffering", b =>
                 {
                     b.HasOne("Application.Common.Models.Employee", "Employee")
-                        .WithMany("EmployeeOfferings")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -299,6 +307,10 @@ namespace Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Application.Common.Models.Employee", null)
+                        .WithMany("Offerings")
+                        .HasForeignKey("EmployeeId");
+
                     b.Navigation("Category");
                 });
 
@@ -313,7 +325,7 @@ namespace Application.Migrations
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("EmployeeOfferings");
+                    b.Navigation("Offerings");
                 });
 #pragma warning restore 612, 618
         }

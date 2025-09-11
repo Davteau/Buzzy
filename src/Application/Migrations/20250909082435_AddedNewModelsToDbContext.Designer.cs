@@ -3,6 +3,7 @@ using System;
 using Application.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250909082435_AddedNewModelsToDbContext")]
+    partial class AddedNewModelsToDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,6 +163,9 @@ namespace Application.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval");
 
+                    b.Property<Guid?>("EmployeeId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -176,6 +182,8 @@ namespace Application.Migrations
                     b.HasIndex("BusinessId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Offerings");
                 });
@@ -271,7 +279,7 @@ namespace Application.Migrations
             modelBuilder.Entity("Application.Common.Models.EmployeeOffering", b =>
                 {
                     b.HasOne("Application.Common.Models.Employee", "Employee")
-                        .WithMany("EmployeeOfferings")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -299,6 +307,10 @@ namespace Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Application.Common.Models.Employee", null)
+                        .WithMany("Offerings")
+                        .HasForeignKey("EmployeeId");
+
                     b.Navigation("Category");
                 });
 
@@ -313,7 +325,7 @@ namespace Application.Migrations
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("EmployeeOfferings");
+                    b.Navigation("Offerings");
                 });
 #pragma warning restore 612, 618
         }
