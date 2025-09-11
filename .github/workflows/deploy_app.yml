@@ -36,7 +36,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: publish-folder-${{ job.name }}
+          name: publish-folder
           path: ./publish
 
   deploy:
@@ -63,6 +63,13 @@ jobs:
           --resource-group Buzzy-dev-rg \
           --connection-string-type PostgreSQL \
           --settings "DefaultConnection=${{ steps.keyvault.outputs.DBConnectionString }}"
+       
+
+       - name: Download artifact
+         uses: actions/download-artifact@v4
+         with:
+            name: publish-folder
+            path: ./publish
 
        - name: Deploy to Azure WebApp
          uses: azure/webapps-deploy@v3
