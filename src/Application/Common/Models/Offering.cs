@@ -7,7 +7,7 @@ public class Offering
     public Guid Id { get; set; }
     public Guid? BusinessId { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(80)]
     public string Name { get; set; }
 
     [MaxLength(250)]

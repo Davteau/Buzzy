@@ -12,14 +12,13 @@ public class EmployeeOffering
     public Guid Id { get; set; }
 
     public Guid EmployeeId { get; set; }
-    public Employee Employee { get; set; } // Reference to the employee
+    public Employee Employee { get; set; }
 
     public Guid OfferingId { get; set; }
-    public Offering Offering { get; set; } // Reference to the general offering
+    public Offering Offering { get; set; }
 
+    [Range(0.01, double.MaxValue, ErrorMessage = "Price must be above 0.")]
+    public decimal Price { get; set; }
 
-    [Range(0.01, double.MaxValue, ErrorMessage = "Cena musi być większa od zera.")]
-    public decimal Price { get; set; } // Price specific to the employee for this offering
-
-    public TimeSpan Duration { get; set; } // Duration specific to the employee for this offering
+    public TimeSpan Duration { get; set; }
 }

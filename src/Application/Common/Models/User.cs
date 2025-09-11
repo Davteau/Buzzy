@@ -15,6 +15,7 @@ public class User
     [EmailAddress(ErrorMessage = "Incorrect format of email.")]
     public string Email { get; set; }
 
+    [MaxLength(20)]
     public string Nickname { get; set; }
 
     public UserRole Role { get; set; } = UserRole.Client;
