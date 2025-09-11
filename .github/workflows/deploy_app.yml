@@ -16,13 +16,13 @@ jobs:
           dotnet-version: '9.x.x'
 
       - name: Restore dependencies
-        run: dotnet restore ../Buzzy.sln
+        run: dotnet restore ../../Buzzy.sln
 
       - name: Build
-        run: dotnet build ../Buzzy.sln --configuration Release --no-restore
+        run: dotnet build ../../Buzzy.sln --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish ../Buzzy.sln --configuration Release --output ./publish
+        run: dotnet publish ../../Buzzy.sln --configuration Release --output ./publish
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
