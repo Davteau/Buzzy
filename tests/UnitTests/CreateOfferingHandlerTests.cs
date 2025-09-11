@@ -17,11 +17,21 @@ public class CreateOfferingHandlerTests
 
         return new ApplicationDbContext(options);
     }
-
+    
     [Fact]
     public async Task Handle_ShouldCreateOfferingSuccessfully()
     {
         var context = GetInMemoryDb();
+
+        var orgId = Guid.NewGuid();
+        context.OfferingCategories.Add(new OfferingCategory
+        {
+            Id = Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b39"),
+            Name = "Test Category"
+        });
+
+        await context.SaveChangesAsync();
+
         var handler = new CreateOfferingHandler(context);
         var command = new CreateOfferingCommand("Test Offering", "Test Description", 99.99m, 30, Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b39"));
 
@@ -36,4 +46,5 @@ public class CreateOfferingHandlerTests
         dbItem.Should().NotBeNull();
         dbItem!.Name.Should().Be("Test Offering");
     }
+    
 }
