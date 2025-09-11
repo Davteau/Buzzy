@@ -11,19 +11,19 @@ public class Appointment
 {
     public Guid Id { get; set; }
 
-    public Guid ClientId { get; set; } // User who booked the appointment
+    public Guid ClientId { get; set; }
     public User Client { get; set; }
 
-    public Guid BusinessId { get; set; } // Business where the appointment is booked
+    public Guid BusinessId { get; set; }
     public Business Business { get; set; }
 
-    public Guid EmployeeOfferingId { get; set; } // Appointment assigned to an employee
+    public Guid EmployeeOfferingId { get; set; }
     public EmployeeOffering Offering { get; set; }
 
-    public DateTime StartTime { get; set; } // When the appointment starts
-    public DateTime EndTime { get; set; } // When the appointment ends
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
 
-    public AppointmentStatus Status { get; set; } // Status of the appointment (e.g., Scheduled, Completed, Canceled)
+    public AppointmentStatus Status { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
