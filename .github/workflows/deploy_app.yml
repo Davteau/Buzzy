@@ -54,14 +54,14 @@ jobs:
          uses: Azure/get-keyvault-secrets@v1
          with:
           keyvault: Buzzy-dev-kv
-          secrets: DB-ConnectionString
+          secrets: DBConnectionString
 
        - name: Set App Service Connection String
          run: |
           az webapp config connection-string set \
           --name Buzzy-dev-app \
           --resource-group Buzzy-dev-rg \
-          --settings DefaultConnection=${{ steps.keyvault.outputs.DB_CONNECTION_STRING }} \
+          --settings DefaultConnection=${{ steps.keyvault.outputs.DBConnectionString }} \
           --connection-string-type PostgreSQL
 
        - name: Deploy to Azure WebApp
