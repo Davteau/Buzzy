@@ -26,6 +26,9 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
+      - name: Test
+        run: dotnet test --configuration Release
+
       - name: Publish
         run: dotnet publish --configuration Release --output ./publish
 
@@ -51,7 +54,7 @@ jobs:
          uses: Azure/get-keyvault-secrets@v1
          with:
           keyvault: Buzzy-dev-kv
-          secrets: DB_CONNECTION_STRING
+          secrets: DB-ConnectionString
 
        - name: Set App Service Connection String
          run: |
