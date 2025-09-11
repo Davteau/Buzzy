@@ -61,8 +61,8 @@ jobs:
           az webapp config connection-string set \
           --name Buzzy-dev-app \
           --resource-group Buzzy-dev-rg \
-          --settings DefaultConnection=${{ steps.keyvault.outputs.DBConnectionString }} \
-          --connection-string-type PostgreSQL
+          --connection-string-type PostgreSQL \
+          --settings "DefaultConnection=${{ steps.keyvault.outputs.DBConnectionString }}"
 
        - name: Deploy to Azure WebApp
          uses: azure/webapps-deploy@v3
