@@ -66,7 +66,7 @@ resource "azurerm_linux_web_app" "app" {
   service_plan_id     = azurerm_service_plan.plan.id
 
   site_config {
-    always_on = false
+    always_on = true
   }
 
   https_only = true

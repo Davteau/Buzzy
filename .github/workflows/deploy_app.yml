@@ -18,26 +18,25 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.x.x'
+          dotnet-version: '9.x'
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build ./src/Api/Api.csproj -c Release --no-restore
 
       - name: Test
-        run: dotnet test --configuration Release
+        run: dotnet test -c Release
 
       - name: Publish
-        run: dotnet publish --configuration Release --output ./publish
-
+        run: dotnet publish ./src/Api/Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp --no-build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: publish-folder
-          path: ./publish
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     needs: build
@@ -68,12 +67,12 @@ jobs:
        - name: Download artifact
          uses: actions/download-artifact@v4
          with:
-            name: publish-folder
-            path: ./publish
+            name: .net-app
 
        - name: Deploy to Azure WebApp
          uses: azure/webapps-deploy@v3
          with:
           app-name: "Buzzy-dev-app"
-          package: ./publish
+          slot-name: 'Production'
+          package: .
 

@@ -21,14 +21,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference("/scalar/v1/api");
-}
+app.MapOpenApi();
+app.MapScalarApiReference("/scalar/v1/api");
 
-app.UseHttpsRedirection();
+
 app.MapOfferingEndpoints();
+
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/scalar/v1/api");
+    return Task.CompletedTask;
+});
 
 
 app.Run();
