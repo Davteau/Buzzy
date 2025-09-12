@@ -83,5 +83,5 @@ resource "azurerm_linux_web_app" "app" {
 resource "azurerm_role_assignment" "app_insights_access" {
   scope                = azurerm_application_insights.appinsights.id
   role_definition_name = "Monitoring Contributor"
-  principal_id         = azurerm_linux_web_app.app.identity.principal_id
+  principal_id         = azurerm_linux_web_app.app.identity[0].principal_id
 }
