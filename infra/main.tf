@@ -69,5 +69,19 @@ resource "azurerm_linux_web_app" "app" {
     always_on = true
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
+  app_settings = { 
+    "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.appinsights.connection_string
+   }
+
   https_only = true
+}
+
+resource "azurerm_role_assignment" "app_insights_access" {
+  scope                = azurerm_application_insights.appinsights.id
+  role_definition_name = "Monitoring Contributor"
+  principal_id         = azurerm_linux_web_app.app.identity.principal_id
 }

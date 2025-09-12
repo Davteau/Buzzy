@@ -1,0 +1,14 @@
+- [ ] AppInsights w terraform ---> Logging -> Serilog
+- [ ] IAM
+- [ ] Docker
+    - [ ] DockerFile
+    - [ ] DockerDesktop
+    - [ ] API -> kontener
+- [ ] Testy (implementacja API EP) --- dotnet test przed merge
+    - [ ] 2 Funkcjonalności
+    - [ ] UT
+    - [ ] INT/End2End
+        - [ ] Postman
+- [ ] Implementacja TrunkBased
+- [ ] GITHUB --> PR --> SQUASH AND MERGE
+- [ ] COPILOT UŻYWANIE PRZYPOMNIJ W PONIEDZIAŁEK
