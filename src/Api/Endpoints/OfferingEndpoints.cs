@@ -1,6 +1,6 @@
 ﻿using Application.Common.Models;
 using Application.Features.Offerings.Commands.CreateOffering;
-using Application.Features.Offeringss.Handlers;
+using Application.Features.Offerings.Handlers;
 using Application.Features.Services.Handlers;
 using ErrorOr;
 using MediatR;
