@@ -22,8 +22,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(
         connectionString,
-        npgsqlOptions => npgsqlOptions.MigrationsAssembly("Application")
-    )
+        npgsqlOptions => npgsqlOptions.MigrationsAssembly("Application"))
 );
 
 var app = builder.Build();
