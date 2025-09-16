@@ -17,6 +17,7 @@ public static class InvitationEndpoints
             async (CreateInvitationLinkCommand command, [FromServices] IMediator mediator) =>
         {
             ErrorOr<InvitationLink> result = await mediator.Send(command);
+            
             return result.MatchToResultCreated($"/api/invitations/{result.Value?.Id}");
         })
         .WithSummary("Create a new invitation link")
@@ -27,6 +28,7 @@ public static class InvitationEndpoints
             async ([FromRoute] Guid id, [FromServices] IMediator mediator) =>
         {
             ErrorOr<InvitationLinkDto> result = await mediator.Send(new GetInvitationLinkCommand(id));
+            
             return result.MatchToResult();
         })
         .WithSummary("Get invitation link details")
@@ -37,13 +39,12 @@ public static class InvitationEndpoints
             async (AcceptInvitationLinkCommand command, [FromServices] IMediator mediator) =>
         {
             ErrorOr<Unit> result = await mediator.Send(command);
+            
             return result.MatchToResultNoContent();
         })
         .WithSummary("Accept an invitation link")
         .WithDescription("User accepts the invitation link to join the company")
         .WithNoContentResponse();
-
-
     }
 }
 
