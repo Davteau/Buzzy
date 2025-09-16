@@ -13,6 +13,7 @@ public class User
     public Guid Id { get; set; }
 
     [EmailAddress(ErrorMessage = "Incorrect format of email.")]
+    [MaxLength(50)]
     public required string Email { get; set; }
 
     [MaxLength(20)]

@@ -18,12 +18,12 @@ internal sealed class GetInvitationLinkHandler(ApplicationDbContext context) : I
         
         if (invitationLink is null)
         {
-            return Error.NotFound("InvitationLink.NotFound", $"Invitation link with token {request.Id} not found.");
+            return Error.NotFound("InvitationLink.NotFound", $"Invitation link not found.");
         }
 
         if (invitationLink.ExpirationDate < DateTime.UtcNow)
         {
-            return Error.Conflict("Invitation.Expired", "This invitation link is expired");
+            return Error.Conflict("Invitation.Expired", "Invitation link is expired");
         }
 
         var employmentExists = await context.Employments
@@ -31,7 +31,7 @@ internal sealed class GetInvitationLinkHandler(ApplicationDbContext context) : I
 
         if (employmentExists)
         {
-            return Error.Conflict("Employment.AlreadyExists", "User is already part of the company");
+            return Error.Conflict("Employment.AlreadyExists", "User is already employed in the company");
         }
 
         return invitationLink.ToDto();

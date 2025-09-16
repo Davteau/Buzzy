@@ -17,14 +17,14 @@ internal sealed class CreateInvitationLinkHandler(ApplicationDbContext context, 
 
         if (user is null)
         {
-            return Error.NotFound("User.NotFound", $"User with email {request.email} not found.");
+            return Error.NotFound("User.NotFound", $"User not found.");
         }
 
         var company = await context.Companies.FirstOrDefaultAsync(c => c.Id == request.companyId, cancellationToken);
 
         if (company is null)
         {
-            return Error.NotFound("Company.NotFound", $"Company with Id {request.companyId} not found.");
+            return Error.NotFound("Company.NotFound", $"Company not found.");
         }
 
         var oldInvitations = await context.InvitationLinks
@@ -50,8 +50,6 @@ internal sealed class CreateInvitationLinkHandler(ApplicationDbContext context, 
         var inviteLink = await invitationService.GenerateInvitationLink(invitationLink.Id);
 
         await emailService.SendAsync(user.Email, "Invitation", $"Click to join: {inviteLink}");
-
-
 
         return invitationLink;
     }

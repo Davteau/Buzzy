@@ -14,8 +14,8 @@ public static class InvitationLinkMapper
         return new InvitationLinkDto
         {
             Id = entity.Id,
-            Email = entity.User.Email,
-            CompanyName = entity.Company.Name,
+            Email = entity.User?.Email,
+            CompanyName = entity.Company?.Name,
             ExpirationDate = entity.ExpirationDate
         };
     }

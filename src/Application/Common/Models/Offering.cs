@@ -17,6 +17,7 @@ public class Offering
     public Guid CategoryId { get; set; }
     public OfferingCategory? Category { get; set; }
 
+    [Range(0.01, double.MaxValue, ErrorMessage = "Price must be above 0.")]
     public decimal Price { get; set; }
 
     public TimeSpan Duration { get; set; }

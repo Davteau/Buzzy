@@ -15,9 +15,14 @@ internal sealed class AcceptInvitationLinkHandler(ApplicationDbContext context):
         var invitation = await context.InvitationLinks
             .FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
 
-        if (invitation is null || invitation.ExpirationDate < DateTime.UtcNow)
+        if (invitation is null)
         {
-            return Error.NotFound("Invitation.NotFound", "Invalid or expired invitation");
+            return Error.NotFound("InvitationLink.NotFound", $"Invitation link not found.");
+        }
+
+        if (invitation.ExpirationDate < DateTime.UtcNow)
+        {
+            return Error.Conflict("Invitation.Expired", "Invitation link is expired");
         }
 
         var employmentExists = await context.Employments
@@ -25,7 +30,7 @@ internal sealed class AcceptInvitationLinkHandler(ApplicationDbContext context):
 
         if (employmentExists)
         {
-            return Error.Conflict("Employment.AlreadyExists", "User is already part of the company");
+            return Error.Conflict("Employment.AlreadyExists", "User is already employed in the company");
         }
 
         var employment = new Employment()
