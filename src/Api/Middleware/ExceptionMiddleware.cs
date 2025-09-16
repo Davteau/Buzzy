@@ -22,21 +22,34 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
     {
         context.Response.ContentType = "application/json";
 
-        var statusCode = exception switch
+        var error = exception switch
         {
-            KeyNotFoundException => HttpStatusCode.NotFound,
-            UnauthorizedAccessException => HttpStatusCode.Unauthorized,
-            _ => HttpStatusCode.InternalServerError
+            KeyNotFoundException => new
+            {
+                HttpCode = HttpStatusCode.NotFound,
+                Message = exception.Message
+            },
+            UnauthorizedAccessException => new
+            {
+                HttpCode = HttpStatusCode.Unauthorized,
+                Message = "Unauthorized access."
+            },
+            _ => new
+            {
+                HttpCode = HttpStatusCode.InternalServerError,
+                Message = "Unexpected error occurred on the server."
+            }
         };
 
         var result = JsonSerializer.Serialize(new
         {
-            error = exception.Message,
+            error = error.Message,
             type = exception.GetType().Name,
-            statusCode = (int)statusCode
+            statusCode = error.HttpCode
         });
 
-        context.Response.StatusCode = (int)statusCode;
+        context.Response.StatusCode = (int)error.HttpCode;
+
         return context.Response.WriteAsync(result);
     }
 }

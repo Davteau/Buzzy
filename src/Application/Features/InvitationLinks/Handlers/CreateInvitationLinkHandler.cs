@@ -47,7 +47,7 @@ internal sealed class CreateInvitationLinkHandler(ApplicationDbContext context, 
 
         await context.SaveChangesAsync(cancellationToken);
 
-        var inviteLink = await invitationService.GenerateInvitationLink(invitationLink.Id);
+        var inviteLink =  invitationService.GenerateInvitationLink(invitationLink.Id);
 
         await emailService.SendAsync(user.Email, "Invitation", $"Click to join: {inviteLink}");
 

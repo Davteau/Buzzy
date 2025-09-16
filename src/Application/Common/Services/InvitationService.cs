@@ -4,14 +4,25 @@ namespace Application.Common.Services;
 
 public class InvitationService(IConfiguration configuration)
 {
-    public Task<string> GenerateInvitationLink(Guid invitationId)
+    private readonly ApiPathOptions _apiPathOptions = configuration.GetSection("ApiPathSettings").Get<ApiPathOptions>()
+                                                  ?? throw new InvalidOperationException("ApiPathSettings not configured");
+    public string GenerateInvitationLink(Guid invitationId)
     {
-        var baseUrl = configuration["AppSettings:BaseUrl"];
-        var path = configuration["AppSettings:InvitationPath"];
+        var baseUrl = _apiPathOptions.BaseUrl;
+        var path = _apiPathOptions.InvitationPath;
 
-        if (string.IsNullOrWhiteSpace(baseUrl) || string.IsNullOrWhiteSpace(path))
-            throw new InvalidOperationException("Unexpected error occured on the server.");
+        if (string.IsNullOrWhiteSpace(baseUrl))
+        {
+            throw new ArgumentNullException("ApiPathSettings:BaseUrl",
+                "Base URL is missing in the configuration.");
+        }
 
-        return Task.FromResult($"{baseUrl.TrimEnd('/')}/{path.Trim('/')}/{invitationId}");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentNullException("ApiPathSettings:InvitationPath",
+                "Invitation Path is missing in the configuration.");
+        }
+
+        return $"{baseUrl.TrimEnd('/')}/{path.Trim('/')}/{invitationId}";
     }
 }
