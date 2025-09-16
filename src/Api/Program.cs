@@ -10,7 +10,6 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
-builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
 if (!builder.Environment.IsDevelopment())
 {
