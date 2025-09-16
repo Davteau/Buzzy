@@ -1,4 +1,5 @@
 using Api.Endpoints;
+using Api.Middleware;
 using Application;
 using Application.Infrastructure.Persistence;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
@@ -33,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference("/scalar/v1/api");
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapOfferingEndpoints();
 app.MapInvitationEndpoints();
 

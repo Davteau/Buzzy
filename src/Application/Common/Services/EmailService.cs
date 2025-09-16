@@ -2,21 +2,17 @@
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-public class EmailService
-{
-    private readonly IConfiguration _configuration;
+namespace Application.Common.Services;
 
-    public EmailService(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+public class EmailService(IConfiguration configuration)
+{
+    private readonly EmailOptions _emailOptions = configuration.GetSection("EmailSettings").Get<EmailOptions>()
+                                                  ?? throw new InvalidOperationException("EmailSettings not configured");
 
     public async Task SendAsync(string toEmail, string subject, string body)
     {
-        var emailSettings = _configuration.GetSection("EmailSettings");
-
         var email = new MimeMessage();
-        email.From.Add(new MailboxAddress(emailSettings["SenderName"], emailSettings["SenderEmail"]));
+        email.From.Add(new MailboxAddress(_emailOptions.SenderName, _emailOptions.SenderEmail));
         email.To.Add(MailboxAddress.Parse(toEmail));
         email.Subject = subject;
 
@@ -24,8 +20,8 @@ public class EmailService
         email.Body = builder.ToMessageBody();
 
         using var smtp = new SmtpClient();
-        await smtp.ConnectAsync( "smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls); 
-        await smtp.AuthenticateAsync(emailSettings["SenderEmail"], emailSettings["Password"]);
+        await smtp.ConnectAsync(_emailOptions.SmtpServer, _emailOptions.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_emailOptions.SenderEmail, _emailOptions.Password);
         await smtp.SendAsync(email);
         await smtp.DisconnectAsync(true);
     }

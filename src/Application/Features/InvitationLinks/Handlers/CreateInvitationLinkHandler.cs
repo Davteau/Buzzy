@@ -7,20 +7,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.InvitationLinks.Handlers;
 
-public record CreateInvitationLinkCommand(string email, Guid companyId) : IRequest<ErrorOr<InvitationLink>>;
+public record CreateInvitationLinkCommand(string Email, Guid CompanyId) : IRequest<ErrorOr<InvitationLink>>;
 
 internal sealed class CreateInvitationLinkHandler(ApplicationDbContext context, EmailService emailService, InvitationService invitationService) : IRequestHandler<CreateInvitationLinkCommand, ErrorOr<InvitationLink>>
 {
     public async Task<ErrorOr<InvitationLink>> Handle(CreateInvitationLinkCommand request, CancellationToken cancellationToken)
     {
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.email, cancellationToken);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
         if (user is null)
         {
             return Error.NotFound("User.NotFound", $"User not found.");
         }
 
-        var company = await context.Companies.FirstOrDefaultAsync(c => c.Id == request.companyId, cancellationToken);
+        var company = await context.Companies.FirstOrDefaultAsync(c => c.Id == request.CompanyId, cancellationToken);
 
         if (company is null)
         {

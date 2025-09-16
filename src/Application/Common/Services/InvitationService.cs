@@ -1,12 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
 
 namespace Application.Common.Services;
+
 public class InvitationService(IConfiguration configuration)
 {
-    public async Task<string> GenerateInvitationLink(Guid invitationId)
+    public Task<string> GenerateInvitationLink(Guid invitationId)
     {
         var baseUrl = configuration["AppSettings:BaseUrl"];
-        return $"{baseUrl}/api/invitations/{invitationId}";
+        var path = configuration["AppSettings:InvitationPath"];
+
+        if (string.IsNullOrWhiteSpace(baseUrl) || string.IsNullOrWhiteSpace(path))
+            throw new InvalidOperationException("Unexpected error occured on the server.");
+
+        return Task.FromResult($"{baseUrl.TrimEnd('/')}/{path.Trim('/')}/{invitationId}");
     }
 }
-
