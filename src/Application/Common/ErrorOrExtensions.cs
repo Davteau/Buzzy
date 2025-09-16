@@ -2,13 +2,15 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
+namespace Application.Common;
+
 public static class ErrorOrExtensions
 {
     public static IResult MatchToResult<T>(this ErrorOr<T> result)
     {
         return result.Match(
-            value => Results.Ok(value),
-            errors => MapErrors(errors)
+            Results.Ok,
+            MapErrors
         );
     }
 
@@ -16,7 +18,7 @@ public static class ErrorOrExtensions
     {
         return result.Match(
             value => Results.Created(uri, value),
-            errors => MapErrors(errors)
+            MapErrors
         );
     }
 
@@ -24,7 +26,7 @@ public static class ErrorOrExtensions
     {
         return result.Match(
             _ => Results.NoContent(),
-            errors => MapErrors(errors)
+            MapErrors
         );
     }
 

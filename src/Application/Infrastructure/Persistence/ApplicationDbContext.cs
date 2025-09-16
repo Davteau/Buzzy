@@ -7,10 +7,11 @@ namespace Application.Infrastructure.Persistence
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Offering> Offerings { get; set; }
-        public DbSet<Business> Businesses { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Employment> Employments { get; set; }
         public DbSet<OfferingCategory> OfferingCategories { get; set; }
-        public DbSet<EmployeeOffering> EmployeeOfferings { get; set; }
+        public DbSet<EmploymentOffering> EmploymentOfferings { get; set; }
+        public DbSet<InvitationLink> InvitationLinks { get; set; }
     }
 }

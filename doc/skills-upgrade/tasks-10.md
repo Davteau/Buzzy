@@ -1,5 +1,6 @@
-- [ ] AppInsights w terraform ---> Logging -> Serilog
-- [ ] IAM
+- [x] AppInsights w terraform ---> Logging -> Serilog
+- [x] IAM
+- [ ] db
 - [ ] Docker
     - [ ] DockerFile
     - [ ] DockerDesktop
@@ -11,4 +12,3 @@
         - [ ] Postman
 - [ ] Implementacja TrunkBased
 - [ ] GITHUB --> PR --> SQUASH AND MERGE
-- [ ] COPILOT UŻYWANIE PRZYPOMNIJ W PONIEDZIAŁEK

@@ -1,32 +1,41 @@
 using Api.Endpoints;
+using Api.Middleware;
 using Application;
 using Application.Infrastructure.Persistence;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using Azure.Monitor.OpenTelemetry.AspNetCore;
-
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
-builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    b => b.MigrationsAssembly("Application"))
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddOpenTelemetry().UseAzureMonitor();
+}
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options => options.UseNpgsql(
+        connectionString,
+        npgsqlOptions => npgsqlOptions.MigrationsAssembly("Application"))
 );
 
 var app = builder.Build();
 
-app.MapOpenApi();
-app.MapScalarApiReference("/scalar/v1/api");
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference("/scalar/v1/api");
+}
 
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapOfferingEndpoints();
+app.MapInvitationEndpoints();
 
 app.MapGet("/", context =>
 {

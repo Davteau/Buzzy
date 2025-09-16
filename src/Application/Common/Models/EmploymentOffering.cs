@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Application.Common.Models;
 
-public class EmployeeOffering
+public class EmploymentOffering
 {
     public Guid Id { get; set; }
 
-    public Guid EmployeeId { get; set; }
-    public Employee Employee { get; set; }
+    public Guid EmploymentId { get; set; }
+    public Employment? Employment { get; set; }
 
     public Guid OfferingId { get; set; }
-    public Offering Offering { get; set; }
+    public Offering? Offering { get; set; }
 
     [Range(0.01, double.MaxValue, ErrorMessage = "Price must be above 0.")]
     public decimal Price { get; set; }

@@ -2,19 +2,19 @@
 
 namespace Application.Common.Models;
 
-public class Business
+public class Company
 {
     public Guid Id { get; set; }
 
     public Guid OwnerId { get; set; }
     
     [MaxLength(80)]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
-    [MaxLength(250)]
-    public string Description { get; set; }
+    [MaxLength(250)] 
+    public string? Description { get; set; }
 
-    public IEnumerable<Employee>? Employees { get; set; }
+    public IEnumerable<Employment>? Employments { get; set; }
 
     public IEnumerable<Offering>? Offerings { get; set; }
 }

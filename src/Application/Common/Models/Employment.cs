@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Application.Common.Models;
 
-public class Employee
+public class Employment
 {
     public Guid Id { get; set; }
 
     public Guid UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
 
-    public Guid BusinessId { get; set; }
-    public Business Business { get; set; }
+    public Guid CompanyId { get; set; }
+    public Company? Company { get; set; }
 
     public IEnumerable<Appointment>? Appointments { get; set; }
-    public IEnumerable<EmployeeOffering>? EmployeeOfferings { get; set; }
+    public IEnumerable<EmploymentOffering>? EmploymentOfferings { get; set; }
 }
