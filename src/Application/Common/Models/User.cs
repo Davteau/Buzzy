@@ -13,10 +13,10 @@ public class User
     public Guid Id { get; set; }
 
     [EmailAddress(ErrorMessage = "Incorrect format of email.")]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [MaxLength(20)]
-    public string Nickname { get; set; }
+    public required string Nickname { get; set; }
 
     public UserRole Role { get; set; } = UserRole.Client;
 }

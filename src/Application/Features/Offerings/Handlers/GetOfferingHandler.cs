@@ -9,7 +9,7 @@ namespace Application.Features.Offerings.Handlers;
 
 public record GetOfferingQuery(Guid Id) : IRequest<ErrorOr<Offering>>;
 
-internal sealed class GetOfferingHandler(ApplicationDbContext context, ILogger logger) : IRequestHandler<GetOfferingQuery, ErrorOr<Offering>>
+internal sealed class GetOfferingHandler(ApplicationDbContext context, ILogger<GetOfferingHandler> logger) : IRequestHandler<GetOfferingQuery, ErrorOr<Offering>>
 {
     public async Task<ErrorOr<Offering>> Handle(GetOfferingQuery request, CancellationToken cancellationToken)
     {

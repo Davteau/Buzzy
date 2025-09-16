@@ -3,6 +3,7 @@ using System;
 using Application.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Application.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250915085540_ChangedBusinessName")]
+    partial class ChangedBusinessName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,10 +40,10 @@ namespace Application.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("EmploymentId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EmploymentOfferingId")
+                    b.Property<Guid>("EmployeeOfferingId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("EndTime")
@@ -61,9 +64,9 @@ namespace Application.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("EmploymentId");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("EmploymentOfferingId");
+                    b.HasIndex("EmployeeOfferingId");
 
                     b.ToTable("Appointments");
                 });
@@ -91,7 +94,7 @@ namespace Application.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("Application.Common.Models.Employment", b =>
+            modelBuilder.Entity("Application.Common.Models.Employee", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,10 +112,10 @@ namespace Application.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Employments");
+                    b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Application.Common.Models.EmploymentOffering", b =>
+            modelBuilder.Entity("Application.Common.Models.EmployeeOffering", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +124,7 @@ namespace Application.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval");
 
-                    b.Property<Guid>("EmploymentId")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("OfferingId")
@@ -132,41 +135,20 @@ namespace Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmploymentId");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("OfferingId");
 
-                    b.ToTable("EmploymentOfferings");
-                });
-
-            modelBuilder.Entity("Application.Common.Models.InvitationLink", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("InvitationLinks");
+                    b.ToTable("EmployeeOfferings");
                 });
 
             modelBuilder.Entity("Application.Common.Models.Offering", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BusinessId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryId")
@@ -256,13 +238,13 @@ namespace Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Application.Common.Models.Employment", null)
+                    b.HasOne("Application.Common.Models.Employee", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("EmploymentId");
+                        .HasForeignKey("EmployeeId");
 
-                    b.HasOne("Application.Common.Models.EmploymentOffering", "Offering")
+                    b.HasOne("Application.Common.Models.EmployeeOffering", "Offering")
                         .WithMany()
-                        .HasForeignKey("EmploymentOfferingId")
+                        .HasForeignKey("EmployeeOfferingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -273,10 +255,10 @@ namespace Application.Migrations
                     b.Navigation("Offering");
                 });
 
-            modelBuilder.Entity("Application.Common.Models.Employment", b =>
+            modelBuilder.Entity("Application.Common.Models.Employee", b =>
                 {
                     b.HasOne("Application.Common.Models.Company", "Company")
-                        .WithMany("Employments")
+                        .WithMany("Employees")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -292,11 +274,11 @@ namespace Application.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Application.Common.Models.EmploymentOffering", b =>
+            modelBuilder.Entity("Application.Common.Models.EmployeeOffering", b =>
                 {
-                    b.HasOne("Application.Common.Models.Employment", "Employment")
-                        .WithMany("EmploymentOfferings")
-                        .HasForeignKey("EmploymentId")
+                    b.HasOne("Application.Common.Models.Employee", "Employee")
+                        .WithMany("EmployeeOfferings")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -306,28 +288,9 @@ namespace Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Employment");
+                    b.Navigation("Employee");
 
                     b.Navigation("Offering");
-                });
-
-            modelBuilder.Entity("Application.Common.Models.InvitationLink", b =>
-                {
-                    b.HasOne("Application.Common.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Application.Common.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Application.Common.Models.Offering", b =>
@@ -338,27 +301,25 @@ namespace Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Application.Common.Models.Company", "Company")
+                    b.HasOne("Application.Common.Models.Company", null)
                         .WithMany("Offerings")
                         .HasForeignKey("CompanyId");
 
                     b.Navigation("Category");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Application.Common.Models.Company", b =>
                 {
-                    b.Navigation("Employments");
+                    b.Navigation("Employees");
 
                     b.Navigation("Offerings");
                 });
 
-            modelBuilder.Entity("Application.Common.Models.Employment", b =>
+            modelBuilder.Entity("Application.Common.Models.Employee", b =>
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("EmploymentOfferings");
+                    b.Navigation("EmployeeOfferings");
                 });
 #pragma warning restore 612, 618
         }

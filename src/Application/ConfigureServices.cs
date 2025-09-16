@@ -3,6 +3,8 @@ using Application.Features.Services.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
+using Application.Common.Services;
+using Application.Migrations;
 
 [assembly: InternalsVisibleTo("UnitTests")]
 
@@ -19,7 +21,8 @@ public static class ApplicationServiceRegistration
 
         });
         services.AddValidatorsFromAssembly(typeof(CreateOfferingValidator).Assembly, includeInternalTypes: true);
-
+        services.AddSingleton<EmailService>();
+        services.AddScoped<InvitationService>();
         return services;
     }
 }

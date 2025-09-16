@@ -5,13 +5,14 @@ namespace Application.Common.Models;
 public class Offering
 {
     public Guid Id { get; set; }
-    public Guid? BusinessId { get; set; }
+    public Guid? CompanyId { get; set; }
+    public Company? Company { get; set; }
 
     [MaxLength(80)]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [MaxLength(250)]
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
     public Guid CategoryId { get; set; }
     public OfferingCategory? Category { get; set; }

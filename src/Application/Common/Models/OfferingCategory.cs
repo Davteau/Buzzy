@@ -7,5 +7,5 @@ public class OfferingCategory
     public Guid Id { get; set; }
 
     [MaxLength(50)]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }
