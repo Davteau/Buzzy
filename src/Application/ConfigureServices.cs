@@ -23,6 +23,7 @@ public static class ApplicationServiceRegistration
         services.AddValidatorsFromAssembly(typeof(CreateOfferingValidator).Assembly, includeInternalTypes: true);
         services.AddSingleton<EmailService>();
         services.AddScoped<InvitationService>();
+
         return services;
     }
 }
