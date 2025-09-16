@@ -25,7 +25,7 @@ internal sealed class AcceptInvitationLinkHandler(ApplicationDbContext context):
 
         if (employmentExists)
         {
-            return Error.Conflict("Employment.AlreadyExists", "User is already part of the company");
+            return Error.Conflict("Employment.AlreadyExists", "User is already employed in the company");
         }
 
         var employment = new Employment()
