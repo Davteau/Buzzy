@@ -24,7 +24,7 @@ internal sealed class CreateInvitationLinkHandler(ApplicationDbContext context, 
 
         if (company is null)
         {
-            return Error.NotFound("Company.NotFound", $"Company with Id {request.companyId} not found.");
+            return Error.NotFound("Company.NotFound", $"Company not found.");
         }
 
         var oldInvitations = await context.InvitationLinks
