@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Api.Endpoints;
+﻿namespace Api.Endpoints;
+﻿
 public static class OfferingEndpointResponses
 {
     public record InternalServerErrorDto(string Error, string Type, int StatusCode);

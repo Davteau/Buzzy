@@ -3,7 +3,8 @@ using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Offerings.Handlers;
+namespace Application.Features.Services.Handlers;
+public record GetOfferingsQuery() : IRequest<ErrorOr<IEnumerable<OfferingDto>>>;
 
 public record GetOfferingsQuery : IRequest<ErrorOr<IEnumerable<OfferingDto>>>;
 
