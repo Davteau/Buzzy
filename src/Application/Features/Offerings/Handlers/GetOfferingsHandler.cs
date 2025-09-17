@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Services.Handlers;
+
 public record GetOfferingsQuery() : IRequest<ErrorOr<IEnumerable<OfferingDto>>>;
 
 internal sealed class GetOfferingsHandler(ApplicationDbContext context) : IRequestHandler<GetOfferingsQuery, ErrorOr<IEnumerable<OfferingDto>>>
