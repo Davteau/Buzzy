@@ -1,18 +1,22 @@
-﻿using Application.Common.Models;
-using Application.Infrastructure.Persistence;
+﻿using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Services.Handlers;
-public record GetOfferingsQuery() : IRequest<ErrorOr<IEnumerable<Offering>>>;
+namespace Application.Features.Offerings.Handlers;
 
-internal sealed class GetOfferingsHandler(ApplicationDbContext context) : IRequestHandler<GetOfferingsQuery, ErrorOr<IEnumerable<Offering>>>
+public record GetOfferingsQuery : IRequest<ErrorOr<IEnumerable<OfferingDto>>>;
+
+internal sealed class GetOfferingsHandler(ApplicationDbContext context) : IRequestHandler<GetOfferingsQuery, ErrorOr<IEnumerable<OfferingDto>>>
 {
-    public async Task<ErrorOr<IEnumerable<Offering>>> Handle(GetOfferingsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<IEnumerable<OfferingDto>>> Handle(GetOfferingsQuery request, CancellationToken cancellationToken)
     {
-        return await context.Offerings
-            .Include(c=>c.Category)
+        var offeringDto = await context.Offerings
+            .Include(o => o.Category)
+            .Include(o => o.Company)
+            .Select(o => o.ToDto())
             .ToListAsync(cancellationToken);
+
+        return offeringDto;
     }
 }

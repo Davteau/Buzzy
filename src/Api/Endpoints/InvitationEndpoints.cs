@@ -15,33 +15,33 @@ public static class InvitationEndpoints
             .WithTags("Invitation");
 
         serviceGroup.MapPost("/", 
-            async (CreateInvitationLinkCommand command, [FromServices] IMediator mediator) =>
+            async (CreateInvitationLinkCommand command, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<InvitationLink> result = await mediator.Send(command);
             
-            return result.MatchToResultCreated($"/api/invitations/{result.Value?.Id}");
+            return result.MatchToResultCreated(httpContext,$"/api/invitations/{result.Value?.Id}");
         })
         .WithSummary("Create a new invitation link")
         .WithDescription("Company generates an invitation link that will be sent to the new employee")
         .WithCreatedResponse<InvitationLink>();
 
         serviceGroup.MapGet("/{id}",
-            async ([FromRoute] Guid id, [FromServices] IMediator mediator) =>
+            async ([FromRoute] Guid id, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<InvitationLinkDto> result = await mediator.Send(new GetInvitationLinkCommand(id));
             
-            return result.MatchToResult();
+            return result.MatchToResult(httpContext);
         })
         .WithSummary("Get invitation link details")
         .WithDescription("Get details of an invitation link by its ID")
         .Produces<IEnumerable<InvitationLinkDto>>(StatusCodes.Status200OK);
 
         serviceGroup.MapPost("/{id}/accept",
-            async (AcceptInvitationLinkCommand command, [FromServices] IMediator mediator) =>
+            async (AcceptInvitationLinkCommand command, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<Unit> result = await mediator.Send(command);
             
-            return result.MatchToResultNoContent();
+            return result.MatchToResultNoContent(httpContext);
         })
         .WithSummary("Accept an invitation link")
         .WithDescription("User accepts the invitation link to join the company")

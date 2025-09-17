@@ -1,6 +1,7 @@
 ﻿using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Services.Handlers;
 
@@ -10,7 +11,7 @@ internal sealed class DeleteOfferingHandler(ApplicationDbContext context) : IReq
 {
     public async Task<ErrorOr<Unit>> Handle(DeleteOfferingCommand request, CancellationToken cancellationToken)
     {
-        var offering = await context.Offerings.FindAsync(request.Id);
+        var offering = await context.Offerings.FirstOrDefaultAsync(o => o.Id == request.Id, cancellationToken);
 
         if (offering is null)
         {
