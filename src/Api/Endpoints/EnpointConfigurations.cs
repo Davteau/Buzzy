@@ -1,4 +1,5 @@
 ﻿namespace Api.Endpoints;
+﻿
 public static class OfferingEndpointResponses
 {
     public record ErrorDto(string Code, string Description);
