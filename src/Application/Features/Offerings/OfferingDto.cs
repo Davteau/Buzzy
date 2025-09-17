@@ -17,10 +17,8 @@ public class OfferingDto
 
     public bool IsActive { get; set; }
 
-
     public Guid CategoryId { get; set; }
     public string? CategoryName { get; set; }
-
 
     public Guid? CompanyId { get; set; }
     public string? CompanyName { get; set; }
