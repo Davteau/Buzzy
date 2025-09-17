@@ -1,5 +1,4 @@
-﻿using Application.Common.Models;
-using Application.Infrastructure.Persistence;
+﻿using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,24 +6,25 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Offerings.Handlers;
 
-public record GetOfferingQuery(Guid Id) : IRequest<ErrorOr<Offering>>;
+public record GetOfferingQuery(Guid Id) : IRequest<ErrorOr<OfferingDto>>;
 
-internal sealed class GetOfferingHandler(ApplicationDbContext context, ILogger<GetOfferingHandler> logger) : IRequestHandler<GetOfferingQuery, ErrorOr<Offering>>
+internal sealed class GetOfferingHandler(ApplicationDbContext context, ILogger<GetOfferingHandler> logger) : IRequestHandler<GetOfferingQuery, ErrorOr<OfferingDto>>
 {
-    public async Task<ErrorOr<Offering>> Handle(GetOfferingQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<OfferingDto>> Handle(GetOfferingQuery request, CancellationToken cancellationToken)
     {
         try
         {
             var offering = await context.Offerings
                 .Include(c => c.Category)
+                .Include(c => c.Company)
                 .FirstOrDefaultAsync(o => o.Id == request.Id, cancellationToken);
 
             if (offering is null)
             {
-                return Error.NotFound("Offering.NotFound", $"Offering with Id {request.Id} not found.");
+                return Error.NotFound("Offering.NotFound", $"Offering not found.");
             }
 
-            return offering;
+            return offering.ToDto();
         }
         catch (Exception e)
         {

@@ -1,8 +1,8 @@
 ﻿using Application.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Application.Features.Offerings.Commands.CreateOffering;
 using ErrorOr;
 using Application.Common.Models;
+using Application.Features.Offerings.Handlers;
 using FluentAssertions;
 
 namespace UnitTests;

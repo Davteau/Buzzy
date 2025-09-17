@@ -1,11 +1,11 @@
 ﻿using Application.Common;
-using Application.Common.Models;
-using Application.Features.Offerings.Commands.CreateOffering;
+using Application.Features.Offerings;
 using Application.Features.Offerings.Handlers;
 using Application.Features.Services.Handlers;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+
 
 
 namespace Api.Endpoints;
@@ -19,18 +19,12 @@ public static class OfferingEndpoints
 
         serviceGroup.MapPost("/", async (CreateOfferingCommand command, [FromServices] IMediator mediator) =>
         {
-            ErrorOr<Offering> result = await mediator.Send(command);
+            ErrorOr<OfferingDto> result = await mediator.Send(command);
             return result.MatchToResultCreated($"/api/offerings/{result.Value?.Id}");
         })
         .WithSummary("Create a new offering")
         .WithDescription("Adds a new offering to the system")
-        .WithCreatedResponse<Offering>()
-        .WithOpenApi(o =>
-        {
-            o.Summary = "Create a new offering";
-            o.Description = "Adds a new offering to the system";
-            return o;
-        });
+        .WithCreatedResponse<OfferingDto>();
 
         serviceGroup.MapDelete("/{id}", async ([FromRoute] Guid id, [FromServices] IMediator mediator) =>
         {
@@ -44,23 +38,22 @@ public static class OfferingEndpoints
 
         serviceGroup.MapGet("/", async (IMediator mediator) =>
         {
-            ErrorOr<IEnumerable<Offering>> result = await mediator.Send(new GetOfferingsQuery());
+            ErrorOr<IEnumerable<OfferingDto>> result = await mediator.Send(new GetOfferingsQuery());
             return result.MatchToResult();
         })
         .WithSummary("Get offerings")
         .WithDescription("Returns the list of offerings")
-        .Produces<IEnumerable<Offering>>(StatusCodes.Status200OK);
+        .WithGetListResponse<IEnumerable<OfferingDto>>();
 
         serviceGroup.MapGet("/{id}", async ([FromRoute] Guid id, IMediator mediator) =>
         {
-            ErrorOr<Offering> result = await mediator.Send(new GetOfferingQuery(id));
+            ErrorOr<OfferingDto> result = await mediator.Send(new GetOfferingQuery(id));
             return result.MatchToResult();
 
         })
         .WithSummary("Get offering")
         .WithDescription("Returns an offering")
-        .Produces<Offering>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound);
+        .WithGetResponse<OfferingDto>();
     }
 }
 
