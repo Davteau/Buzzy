@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ErrorOr;
 using Application.Common.Models;
+using Application.Features.Offerings;
 using Application.Features.Offerings.Handlers;
 using FluentAssertions;
 
@@ -17,13 +18,18 @@ public class CreateOfferingHandlerTests
 
         return new ApplicationDbContext(options);
     }
-    
+
     [Fact]
     public async Task Handle_ShouldCreateOfferingSuccessfully()
     {
         var context = GetInMemoryDb();
 
-        var orgId = Guid.NewGuid();
+        context.Companies.Add(new Company
+        {
+            Id = Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b37"),
+            Name = "Test Company",
+            OwnerId = Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b33")
+        });
         context.OfferingCategories.Add(new OfferingCategory
         {
             Id = Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b39"),
@@ -33,9 +39,18 @@ public class CreateOfferingHandlerTests
         await context.SaveChangesAsync();
 
         var handler = new CreateOfferingHandler(context);
-        var command = new CreateOfferingCommand("Test Offering", "Test Description", 99.99m, 30, Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b39"));
+        var command = new CreateOfferingCommand(new CreateOfferingDto
+        {
+            Name = "Test Offering",
+            Description = "Test Description",
+            Price = 99.99m,
+            Duration = 30,
+            CategoryId = Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b39"),
+            CompanyId = Guid.Parse("7ee5bb18-78de-4fc6-b514-bcb3881c8b37"),
 
-        ErrorOr<Offering> result = await handler.Handle(command, CancellationToken.None);
+        });
+
+        ErrorOr<OfferingDto> result = await handler.Handle(command, CancellationToken.None);
 
         result.IsError.Should().BeFalse();
         result.Value.Name.Should().Be("Test Offering");
@@ -46,5 +61,5 @@ public class CreateOfferingHandlerTests
         dbItem.Should().NotBeNull();
         dbItem!.Name.Should().Be("Test Offering");
     }
-    
+
 }
