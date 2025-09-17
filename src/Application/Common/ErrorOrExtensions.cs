@@ -1,37 +1,41 @@
 ﻿using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Error = ErrorOr.Error;
 
 namespace Application.Common;
 
 public static class ErrorOrExtensions
 {
-    public static IResult MatchToResult<T>(this ErrorOr<T> result)
+    public static IResult MatchToResult<T>(this ErrorOr<T> result, HttpContext httpContext)
     {
         return result.Match(
             Results.Ok,
-            MapErrors
+            errors =>  MapErrors(httpContext, errors)
         );
     }
 
-    public static IResult MatchToResultCreated<T>(this ErrorOr<T> result, string uri)
+    public static IResult MatchToResultCreated<T>(this ErrorOr<T> result, HttpContext httpContext,string uri)
     {
         return result.Match(
             value => Results.Created(uri, value),
-            MapErrors
+            errors => MapErrors(httpContext, errors)
         );
     }
 
-    public static IResult MatchToResultNoContent(this ErrorOr<Unit> result)
+    public static IResult MatchToResultNoContent(this ErrorOr<Unit> result, HttpContext httpContext)
     {
         return result.Match(
             _ => Results.NoContent(),
-            MapErrors
+            errors => MapErrors(httpContext, errors)
         );
     }
 
-    private static IResult MapErrors(IReadOnlyList<Error> errors)
+    private static IResult MapErrors(HttpContext httpContext, List<Error> errors)
     {
+        string instance = httpContext.Request.Path;
+
         if (errors.All(e => e.Type == ErrorType.Validation))
         {
             var errorsDict = errors
@@ -40,18 +44,47 @@ public static class ErrorOrExtensions
                     g => g.Key,
                     g => g.Select(e => e.Description).ToArray()
                 );
-            return Results.ValidationProblem(errorsDict);
+
+            var problemDetails = new ValidationProblemDetails(errorsDict)
+            {
+                Type = "https://example.com/errors/validation",
+                Title = "Validation error",
+                Status = StatusCodes.Status400BadRequest,
+                Instance = instance
+            };
+
+            return Results.BadRequest(problemDetails);
         }
 
         if (errors.All(e => e.Type == ErrorType.NotFound))
         {
-            return Results.NotFound(new { Errors = errors.Select(e => new { e.Code, e.Description }) });
+            var problemDetails = new ProblemDetails
+            {
+                Type = "https://example.com/errors/not-found",
+                Title = "Resource not found",
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Join("; ", errors.Select(e => e.Description)),
+                Instance = instance
+            };
+
+            return Results.NotFound(problemDetails);
         }
 
+        var generalProblem = new ProblemDetails
+        {
+            Type = "https://example.com/errors/internal-server-error",
+            Title = "An unexpected error occurred",
+            Status = StatusCodes.Status500InternalServerError,
+            Detail = string.Join("; ", errors.Select(e => e.Description)),
+            Instance = instance
+        };
+
         return Results.Problem(
-            detail: string.Join("; ", errors.Select(e => e.Description)),
-            statusCode: 500
+            detail: generalProblem.Detail,
+            statusCode: generalProblem.Status,
+            title: generalProblem.Title,
+            type: generalProblem.Type,           
+            instance: generalProblem.Instance
         );
     }
-
 }

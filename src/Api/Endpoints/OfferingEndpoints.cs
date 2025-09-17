@@ -17,38 +17,38 @@ public static class OfferingEndpoints
         var serviceGroup = app.MapGroup("/api/offerings")
             .WithTags("Offering");
 
-        serviceGroup.MapPost("/", async (CreateOfferingCommand command, [FromServices] IMediator mediator) =>
+        serviceGroup.MapPost("/", async (CreateOfferingCommand command, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<OfferingDto> result = await mediator.Send(command);
-            return result.MatchToResultCreated($"/api/offerings/{result.Value?.Id}");
+            return result.MatchToResultCreated(httpContext, $"/api/offerings/{result.Value?.Id}");
         })
         .WithSummary("Create a new offering")
         .WithDescription("Adds a new offering to the system")
         .WithCreatedResponse<OfferingDto>();
 
-        serviceGroup.MapDelete("/{id}", async ([FromRoute] Guid id, [FromServices] IMediator mediator) =>
+        serviceGroup.MapDelete("/{id}", async ([FromRoute] Guid id, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<Unit> result = await mediator.Send(new DeleteOfferingCommand(id));
-            return result.MatchToResultNoContent();
+            return result.MatchToResultNoContent(httpContext);
 
         })
         .WithSummary("Delete an offering")
         .WithDescription("Deletes an existing offering by its ID.")
         .WithNoContentResponse();
 
-        serviceGroup.MapGet("/", async (IMediator mediator) =>
+        serviceGroup.MapGet("/", async (IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<IEnumerable<OfferingDto>> result = await mediator.Send(new GetOfferingsQuery());
-            return result.MatchToResult();
+            return result.MatchToResult(httpContext);
         })
         .WithSummary("Get offerings")
         .WithDescription("Returns the list of offerings")
         .WithGetListResponse<IEnumerable<OfferingDto>>();
 
-        serviceGroup.MapGet("/{id}", async ([FromRoute] Guid id, IMediator mediator) =>
+        serviceGroup.MapGet("/{id}", async ([FromRoute] Guid id, IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<OfferingDto> result = await mediator.Send(new GetOfferingQuery(id));
-            return result.MatchToResult();
+            return result.MatchToResult(httpContext);
 
         })
         .WithSummary("Get offering")
