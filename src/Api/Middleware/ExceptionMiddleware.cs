@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Text.Json;
 
 namespace Api.Middleware;
@@ -20,35 +21,29 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = "application/problem+json";
 
-        var error = exception switch
+        ProblemDetails problem = exception switch
         {
-            KeyNotFoundException => new
+            UnauthorizedAccessException => new ProblemDetails
             {
-                HttpCode = HttpStatusCode.NotFound,
-                Message = exception.Message
+                Status = (int)HttpStatusCode.Unauthorized,
+                Title = "Unauthorized",
+                Detail = "Unauthorized access.",
+                Type = "https://httpstatuses.com/401"
             },
-            UnauthorizedAccessException => new
+            _ => new ProblemDetails
             {
-                HttpCode = HttpStatusCode.Unauthorized,
-                Message = "Unauthorized access."
-            },
-            _ => new
-            {
-                HttpCode = HttpStatusCode.InternalServerError,
-                Message = "Unexpected error occurred on the server."
+                Status = (int)HttpStatusCode.InternalServerError,
+                Title = "Internal Server Error",
+                Detail = "Unexpected error occurred on the server.",
+                Type = "https://httpstatuses.com/500"
             }
         };
 
-        var result = JsonSerializer.Serialize(new
-        {
-            error = error.Message,
-            type = exception.GetType().Name,
-            statusCode = error.HttpCode
-        });
+        context.Response.StatusCode = problem.Status ?? (int)HttpStatusCode.InternalServerError;
 
-        context.Response.StatusCode = (int)error.HttpCode;
+        var result = JsonSerializer.Serialize(problem);
 
         return context.Response.WriteAsync(result);
     }

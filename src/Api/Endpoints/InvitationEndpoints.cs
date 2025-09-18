@@ -23,18 +23,18 @@ public static class InvitationEndpoints
         })
         .WithSummary("Create a new invitation link")
         .WithDescription("Company generates an invitation link that will be sent to the new employee")
-        .WithCreatedResponse<InvitationLink>();
+        .WithCreatedResponse<InvitationLinkDto>();
 
         serviceGroup.MapGet("/{id}",
             async ([FromRoute] Guid id, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
             ErrorOr<InvitationLinkDto> result = await mediator.Send(new GetInvitationLinkCommand(id));
-            
+
             return result.MatchToResult(httpContext);
         })
         .WithSummary("Get invitation link details")
         .WithDescription("Get details of an invitation link by its ID")
-        .Produces<IEnumerable<InvitationLinkDto>>(StatusCodes.Status200OK);
+        .WithGetResponse<InvitationLinkDto>();
 
         serviceGroup.MapPost("/{id}/accept",
             async (AcceptInvitationLinkCommand command, [FromServices] IMediator mediator, HttpContext httpContext) =>
