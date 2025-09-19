@@ -73,7 +73,10 @@ jobs:
          run: |
           dotnet ef database update \
           --project ./src/Application/Application.csproj \
+          --startup-project ./src/Api/Api.csproj \
           --connection "${{ steps.keyvault.outputs.DBConnectionString }}"
+         working-directory: ./src/Api
+
        
 
        - name: Download artifact
