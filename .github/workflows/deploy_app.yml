@@ -49,6 +49,11 @@ jobs:
        - name: Checkout repository
          uses: actions/checkout@v3
 
+       - name: Setup .NET
+         uses: actions/setup-dotnet@v3
+         with:
+          dotnet-version: '9.x'
+
        - name: Azure Login
          uses: azure/login@v2
          with:
@@ -72,8 +77,8 @@ jobs:
        - name: Install dotnet-ef
          run: dotnet tool install --global dotnet-ef
 
-       - name: List repo files
-         run: ls -R
+       - name: Build
+         run: dotnet build ./src/Api/Api.csproj -c Release
 
        - name: Apply EF Core migrations
          run: |
