@@ -70,7 +70,7 @@ jobs:
          run: dotnet tool install --global dotnet-ef
 
        - name: List repo files
-         run: ls -R $GITHUB_WORKSPACE
+         run: ls -R
 
        - name: Apply EF Core migrations
          run: |
