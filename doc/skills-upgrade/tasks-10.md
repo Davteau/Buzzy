@@ -1,12 +1,12 @@
 - [x] AppInsights w terraform ---> Logging -> Serilog
 - [x] IAM
-- [ ] db
+- [x] db
 - [ ] Docker
     - [ ] DockerFile
     - [ ] DockerDesktop
     - [ ] API -> kontener
 - [ ] Testy (implementacja API EP) --- dotnet test przed merge
-    - [ ] 2 Funkcjonalności
+    - [x] 2 Funkcjonalności
     - [ ] UT
     - [ ] INT/End2End
         - [ ] Postman

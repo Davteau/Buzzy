@@ -65,6 +65,15 @@ jobs:
           --resource-group Buzzy-dev-rg \
           --connection-string-type PostgreSQL \
           --settings "DefaultConnection=${{ steps.keyvault.outputs.DBConnectionString }}"
+        
+       - name: Install dotnet-ef
+         run: dotnet tool install --global dotnet-ef
+
+       - name: Apply EF Core migrations
+         run: |
+          dotnet ef database update \
+          --project ./src/Application/Application.csproj \
+          --connection "${{ steps.keyvault.outputs.DBConnectionString }}"
        
 
        - name: Download artifact

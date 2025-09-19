@@ -37,11 +37,16 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.MapOfferingEndpoints();
 app.MapInvitationEndpoints();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.MapGet("/", context =>
 {
     context.Response.Redirect("/scalar/v1/api");
     return Task.CompletedTask;
 });
-
 
 app.Run();
