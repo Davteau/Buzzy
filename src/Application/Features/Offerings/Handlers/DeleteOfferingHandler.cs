@@ -8,7 +8,7 @@ namespace Application.Features.Services.Handlers;
 
 public record DeleteOfferingCommand(Guid Id) : IRequest<ErrorOr<Unit>>;
 
-internal sealed class DeleteOfferingHandler(ApplicationDbContext context, ICacheService _cacheService) : IRequestHandler<DeleteOfferingCommand, ErrorOr<Unit>>
+internal sealed class DeleteOfferingHandler(ApplicationDbContext context, ICacheService cacheService) : IRequestHandler<DeleteOfferingCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(DeleteOfferingCommand request, CancellationToken cancellationToken)
     {
@@ -20,6 +20,8 @@ internal sealed class DeleteOfferingHandler(ApplicationDbContext context, ICache
         }
 
         context.Offerings.Remove(offering);
+
+        await cacheService.RemoveAsync($"offering-by-id-{request.Id}", cancellationToken);
 
         await context.SaveChangesAsync(cancellationToken);
 
