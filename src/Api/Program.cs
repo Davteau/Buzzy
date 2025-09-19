@@ -43,12 +43,10 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-
 app.MapGet("/", context =>
 {
     context.Response.Redirect("/scalar/v1/api");
     return Task.CompletedTask;
 });
-
 
 app.Run();
