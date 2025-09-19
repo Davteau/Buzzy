@@ -30,7 +30,7 @@ jobs:
         run: dotnet build ./src/Api/Api.csproj -c Release --no-restore
 
       - name: Test
-        run: dotnet test -c Release
+        run: dotnet test ./Buzzy.sln -c Release
 
       - name: Publish
         run: dotnet publish ./src/Api/Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp --no-build
