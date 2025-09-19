@@ -1,4 +1,5 @@
-﻿using Application.Infrastructure.Persistence;
+﻿using Application.Abstractions;
+using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Offerings.Handlers;
 
-public record GetOfferingQuery(Guid Id) : IRequest<ErrorOr<OfferingDto>>;
+public sealed record GetOfferingQuery(Guid Id) : ICachedQuery<ErrorOr<OfferingDto>>
+{
+    public string CacheKey => $"offering-by-id-{Id}";
+    public TimeSpan? Expiration => null;
+}
 
 internal sealed class GetOfferingHandler(ApplicationDbContext context, ILogger<GetOfferingHandler> logger) : IRequestHandler<GetOfferingQuery, ErrorOr<OfferingDto>>
 {

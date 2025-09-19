@@ -1,13 +1,14 @@
-﻿using Application.Infrastructure.Persistence;
+﻿using Application.Common.Caching;
+using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Services.Handlers;
 
-public record class DeleteOfferingCommand(Guid Id) : IRequest<ErrorOr<Unit>>;
+public record DeleteOfferingCommand(Guid Id) : IRequest<ErrorOr<Unit>>;
 
-internal sealed class DeleteOfferingHandler(ApplicationDbContext context) : IRequestHandler<DeleteOfferingCommand, ErrorOr<Unit>>
+internal sealed class DeleteOfferingHandler(ApplicationDbContext context, ICacheService _cacheService) : IRequestHandler<DeleteOfferingCommand, ErrorOr<Unit>>
 {
     public async Task<ErrorOr<Unit>> Handle(DeleteOfferingCommand request, CancellationToken cancellationToken)
     {

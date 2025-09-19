@@ -1,11 +1,16 @@
-﻿using Application.Infrastructure.Persistence;
+﻿using Application.Abstractions;
+using Application.Infrastructure.Persistence;
 using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.InvitationLinks.Handlers;
 
-public record GetInvitationLinkCommand(Guid Id) : IRequest<ErrorOr<InvitationLinkDto>>;
+public record GetInvitationLinkCommand(Guid Id) : ICachedQuery<ErrorOr<InvitationLinkDto>>
+{
+    public string CacheKey => $"invitation-link-by-id-{Id}";
+    public TimeSpan? Expiration => null;
+};
 
 internal sealed class GetInvitationLinkHandler(ApplicationDbContext context) : IRequestHandler<GetInvitationLinkCommand, ErrorOr<InvitationLinkDto>>
 {
