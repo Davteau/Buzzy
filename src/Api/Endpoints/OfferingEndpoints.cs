@@ -1,7 +1,6 @@
 ﻿using Application.Common;
 using Application.Features.Offerings;
 using Application.Features.Offerings.Handlers;
-using Application.Features.Services.Handlers;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

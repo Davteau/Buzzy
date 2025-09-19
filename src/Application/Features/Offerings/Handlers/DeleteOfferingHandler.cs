@@ -3,7 +3,7 @@ using ErrorOr;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Services.Handlers;
+namespace Application.Features.Offerings.Handlers;
 
 public record class DeleteOfferingCommand(Guid Id) : IRequest<ErrorOr<Unit>>;
 

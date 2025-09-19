@@ -1,7 +1,7 @@
-﻿using Application.Features.Services.Handlers;
+﻿using Application.Features.Offerings.Handlers;
 using FluentValidation;
 
-namespace Application.Features.Services.Validators;
+namespace Application.Features.Offerings.Validators;
 
 internal sealed class DeleteOfferingValidator : AbstractValidator<DeleteOfferingCommand>
 {
