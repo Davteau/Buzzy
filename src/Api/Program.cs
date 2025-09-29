@@ -84,20 +84,6 @@ app.MapGet("/", context =>
     return Task.CompletedTask;
 });
 
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/api/auth/google-login") ||
-        context.Request.Path.StartsWithSegments("/api/auth/callback"))
-    {
-        context.Response.Headers.Remove("Cross-Origin-Opener-Policy");
-        context.Response.Headers.Remove("Cross-Origin-Embedder-Policy");
-    }
-
-    await next();
-});
-
-
-
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
