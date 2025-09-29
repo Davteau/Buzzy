@@ -4,13 +4,11 @@ namespace Api.Endpoints;
 ﻿
 public static class OfferingEndpointResponses
 {
-    public record InternalServerErrorDto(string Error, string Type, int StatusCode);
-
     public static RouteHandlerBuilder WithGetResponse<T>(this RouteHandlerBuilder builder)
     {
         return builder
             .Produces<T>(StatusCodes.Status200OK)
-            .Produces<InternalServerErrorDto>(StatusCodes.Status500InternalServerError)
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 
@@ -18,7 +16,7 @@ public static class OfferingEndpointResponses
     {
         return builder
             .Produces<T>(StatusCodes.Status200OK)
-            .Produces<InternalServerErrorDto>(StatusCodes.Status500InternalServerError);
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     public static RouteHandlerBuilder WithCreatedResponse<T>(this RouteHandlerBuilder builder)
@@ -28,7 +26,7 @@ public static class OfferingEndpointResponses
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized) 
-            .Produces<InternalServerErrorDto>(StatusCodes.Status500InternalServerError);
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 
     public static RouteHandlerBuilder WithNoContentResponse(this RouteHandlerBuilder builder)
@@ -37,6 +35,6 @@ public static class OfferingEndpointResponses
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-            .Produces<InternalServerErrorDto>(StatusCodes.Status500InternalServerError);
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
     }
 }

@@ -12,11 +12,11 @@ public static class ErrorOrExtensions
     {
         return result.Match(
             Results.Ok,
-            errors =>  MapErrors(httpContext, errors)
+            errors => MapErrors(httpContext, errors)
         );
     }
 
-    public static IResult MatchToResultCreated<T>(this ErrorOr<T> result, HttpContext httpContext,string uri)
+    public static IResult MatchToResultCreated<T>(this ErrorOr<T> result, HttpContext httpContext, string uri)
     {
         return result.Match(
             value => Results.Created(uri, value),
@@ -70,21 +70,43 @@ public static class ErrorOrExtensions
             return Results.NotFound(problemDetails);
         }
 
+        if (errors.All(e => e.Type == ErrorType.Conflict))
+        {
+            var problemDetails = new ProblemDetails
+            {
+                Type = "https://example.com/errors/conflict",
+                Title = "Conflict",
+                Status = StatusCodes.Status409Conflict,
+                Detail = string.Join("; ", errors.Select(e => e.Description)),
+                Instance = instance
+            };
+
+            return Results.Conflict(problemDetails);
+        }
+
+        if (errors.All(e => e.Type == ErrorType.Forbidden))
+        {
+            var problemDetails = new ProblemDetails
+            {
+                Type = "https://example.com/errors/forbidden",
+                Title = "Forbidden",
+                Status = StatusCodes.Status403Forbidden,
+                Detail = string.Join("; ", errors.Select(e => e.Description)),
+                Instance = instance
+            };
+
+            return Results.Json(problemDetails, statusCode: StatusCodes.Status403Forbidden);
+        }
+
         var generalProblem = new ProblemDetails
         {
-            Type = "https://example.com/errors/internal-server-error",
-            Title = "An unexpected error occurred",
-            Status = StatusCodes.Status500InternalServerError,
+            Type = "https://example.com/errors/bad-request",
+            Title = "Request could not be processed",
+            Status = StatusCodes.Status400BadRequest,
             Detail = string.Join("; ", errors.Select(e => e.Description)),
             Instance = instance
         };
 
-        return Results.Problem(
-            detail: generalProblem.Detail,
-            statusCode: generalProblem.Status,
-            title: generalProblem.Title,
-            type: generalProblem.Type,           
-            instance: generalProblem.Instance
-        );
+        return Results.BadRequest(generalProblem);
     }
 }
