@@ -1,16 +1,37 @@
 using Api.Endpoints;
 using Api.Middleware;
 using Application;
+using Application.Features.Authentication.Common;
 using Application.Infrastructure.Persistence;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["TokenSettings:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["TokenSettings:Audience"],
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["TokenSettings:Token"]!)),
+            ValidateIssuerSigningKey = true
+        };
+    });
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -25,6 +46,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(
         npgsqlOptions => npgsqlOptions.MigrationsAssembly("Application"))
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5174")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+builder.Services.AddScoped<TokenFactory>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -36,6 +70,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapOfferingEndpoints();
 app.MapInvitationEndpoints();
+app.MapAuthEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -48,5 +83,23 @@ app.MapGet("/", context =>
     context.Response.Redirect("/scalar/v1/api");
     return Task.CompletedTask;
 });
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api/auth/google-login") ||
+        context.Request.Path.StartsWithSegments("/api/auth/callback"))
+    {
+        context.Response.Headers.Remove("Cross-Origin-Opener-Policy");
+        context.Response.Headers.Remove("Cross-Origin-Embedder-Policy");
+    }
+
+    await next();
+});
+
+
+
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

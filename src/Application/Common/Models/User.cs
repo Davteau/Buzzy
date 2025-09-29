@@ -17,7 +17,10 @@ public class User
     public required string Email { get; set; }
 
     [MaxLength(20)]
-    public required string Nickname { get; set; }
+    public string? Nickname { get; set; }
 
     public UserRole Role { get; set; } = UserRole.Client;
+
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }
