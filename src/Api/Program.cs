@@ -36,6 +36,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapOfferingEndpoints();
 app.MapInvitationEndpoints();
+app.MapCompanyEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {

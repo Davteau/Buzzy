@@ -5,8 +5,6 @@ using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-
-
 namespace Api.Endpoints;
 
 public static class OfferingEndpoints
@@ -16,9 +14,9 @@ public static class OfferingEndpoints
         var serviceGroup = app.MapGroup("/api/offerings")
             .WithTags("Offering");
 
-        serviceGroup.MapPost("/", async (CreateOfferingCommand command, [FromServices] IMediator mediator, HttpContext httpContext) =>
+        serviceGroup.MapPost("/", async (CreateOfferingDto dto, [FromServices] IMediator mediator, HttpContext httpContext) =>
         {
-            ErrorOr<OfferingDto> result = await mediator.Send(command);
+            ErrorOr<OfferingDto> result = await mediator.Send(new CreateOfferingCommand(dto));
             return result.MatchToResultCreated(httpContext, $"/api/offerings/{result.Value?.Id}");
         })
         .WithSummary("Create a new offering")

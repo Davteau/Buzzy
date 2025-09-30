@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Companies\Validators\" />
     <Folder Include="Features\InvitationLinks\Validators\" />
   </ItemGroup>
 
