@@ -39,6 +39,7 @@ internal sealed class CreateOfferingHandler(ApplicationDbContext context) : IReq
         };
 
         context.Offerings.Add(offering);
+        Console.WriteLine(offering.Id);
 
         await context.SaveChangesAsync(cancellationToken);
 
